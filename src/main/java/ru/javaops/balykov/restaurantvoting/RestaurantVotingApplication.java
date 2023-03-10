@@ -14,6 +14,5 @@ public class RestaurantVotingApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        System.out.println("Init");
     }
 }
