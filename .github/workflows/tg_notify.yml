@@ -1,0 +1,17 @@
+name: tg-notify
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Update status
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.CHAT_ID }}
+        token: ${{ secrets.BOT_ID }}
+        format: markdown
+        disable_web_page_preview: true
+        message: |
+                 ${{ github.repository }}, new commit:
+                 *${{ github.event.commits[0].message }}*
+                 https://github.com/${{ github.repository }}/commit/${{github.sha}}
