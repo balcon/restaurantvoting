@@ -1,9 +1,11 @@
 spring:
-  main:
-    banner-mode: off
   jpa:
     show-sql: true
     properties:
       hibernate.format_sql: true
       # https://github.com/spring-projects/spring-data-jpa/issues/2717#issuecomment-1336159936
       jakarta.persistence.sharedCache.mode: UNSPECIFIED
+  datasource:
+    url: jdbc:h2:mem:restaurant_voting;DB_CLOSE_ON_EXIT=FALSE
+  output.ansi.enabled: always
+  main.banner-mode: off
