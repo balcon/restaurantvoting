@@ -6,27 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.javaops.balykov.restaurantvoting.TestUtil;
-import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class RestaurantServiceTest {
 
     @Autowired
-    RestaurantService service;
-
-    @Autowired
-    DishService dishService;
+    private RestaurantService service;
 
     @Test
-    void get() {
-        List<Dish> dishes = dishService.saveAll(TestUtil.dishes);
+    void save() {
+        service.save(TestUtil.restaurant1);
 
-        Restaurant rest1 = service.save(TestUtil.restaurant1);
-
-        System.out.println(rest1);
+        List<Restaurant> restaurants = service.getAll();
+        assertEquals(1, restaurants.size());
     }
 }

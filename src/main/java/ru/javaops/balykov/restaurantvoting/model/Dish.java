@@ -2,6 +2,8 @@ package ru.javaops.balykov.restaurantvoting.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,12 +18,17 @@ public class Dish extends AbstractPersistable<Integer> {
     private String name;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private Integer price;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Restaurant restaurant;
 
-
-    public Dish(String name, Integer price) {
+    public Dish(String name, String description, Integer price) {
         this.name = name;
+        this.description = description;
         this.price = price;
     }
 }

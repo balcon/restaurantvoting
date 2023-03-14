@@ -17,15 +17,17 @@ public class Restaurant extends AbstractPersistable<Integer> {
     private String name;
 
     @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Dish> dishes;
 
-    public Restaurant(String name, String address) {
+    public Restaurant(String name, String description, String address) {
         this.name = name;
+        this.description = description;
         this.address = address;
     }
 }
