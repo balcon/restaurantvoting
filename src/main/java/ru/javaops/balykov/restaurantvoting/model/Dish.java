@@ -7,17 +7,15 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-public class Dish extends AbstractPersistable<Integer> {
+public class Dish extends AbstractBaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)

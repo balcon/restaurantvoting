@@ -24,6 +24,6 @@ class RestaurantServiceTest {
         service.save(TestUtil.restaurant1);
 
         List<Restaurant> restaurants = service.getAll();
-        assertEquals(1, restaurants.size());
+        assertEquals(3, restaurants.size());
     }
 }

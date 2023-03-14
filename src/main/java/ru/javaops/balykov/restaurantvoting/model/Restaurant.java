@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Restaurant extends AbstractPersistable<Integer> {
+public class Restaurant extends AbstractBaseEntity {
     @Column(nullable = false)
     private String name;
 
