@@ -1,9 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class AbstractBaseEntity {
+    public static final int START_SEQ = 1000;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "main_seq", sequenceName = "main_seq",
+            allocationSize = 1, initialValue = START_SEQ)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_seq")
     private Integer id;
 }

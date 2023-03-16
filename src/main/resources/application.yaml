@@ -2,13 +2,13 @@ spring:
   jpa:
     show-sql: true
     properties:
-      hibernate.format_sql: true
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
       # https://github.com/spring-projects/spring-data-jpa/issues/2717#issuecomment-1336159936
       jakarta.persistence.sharedCache.mode: UNSPECIFIED
     hibernate.ddl-auto: create-drop
-    # https://www.baeldung.com/spring-boot-data-sql-and-schema-sql#theschemasqlfile
     defer-datasource-initialization: true
-  datasource:
-    url: jdbc:h2:mem:restaurant_voting;DB_CLOSE_ON_EXIT=FALSE
+  datasource.url: jdbc:h2:mem:restaurant_voting;DB_CLOSE_ON_EXIT=FALSE
   output.ansi.enabled: always
   main.banner-mode: off
