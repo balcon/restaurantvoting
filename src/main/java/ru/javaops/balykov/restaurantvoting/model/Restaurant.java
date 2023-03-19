@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "dishes")
 public class Restaurant extends AbstractBaseEntity {
     @Column(nullable = false)
     private String name;
@@ -22,7 +22,7 @@ public class Restaurant extends AbstractBaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Dish> dishes;
 
     public Restaurant(Integer id, String name, String description, String address, List<Dish> dishes) {

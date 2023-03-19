@@ -1,6 +1,5 @@
 package ru.javaops.balykov.restaurantvoting.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatList;
 import static ru.javaops.balykov.restaurantvoting.DemoData.REST_1;
 import static ru.javaops.balykov.restaurantvoting.DemoData.REST_2;
 
@@ -22,9 +23,22 @@ class RestaurantRepositoryTest {
     private RestaurantRepository repository;
 
     @Test
+    void get() {
+        Restaurant restaurant = repository.findById(1).orElseThrow();
+
+        assertThat(restaurant)
+                .usingRecursiveComparison()
+                .ignoringFields("dishes")
+                .isEqualTo(REST_1);
+    }
+
+    @Test
     void getAll() {
         List<Restaurant> restaurants = repository.findAll();
 
-        Assertions.assertIterableEquals(List.of(REST_1, REST_2), restaurants);
+        assertThatList(restaurants)
+                .usingRecursiveComparison()
+                .ignoringFields("dishes")
+                .isEqualTo(List.of(REST_1, REST_2));
     }
 }
