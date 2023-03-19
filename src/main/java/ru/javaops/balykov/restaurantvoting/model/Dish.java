@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Dish extends AbstractBaseEntity {
+public class Dish extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 

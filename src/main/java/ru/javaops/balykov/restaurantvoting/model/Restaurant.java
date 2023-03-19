@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Restaurant extends AbstractBaseEntity {
+public class Restaurant extends AbstractEntity {
     @Column(nullable = false)
     private String name;
 
@@ -32,4 +32,7 @@ public class Restaurant extends AbstractBaseEntity {
         this.address = address;
         this.dishes = new ArrayList<>(dishes);
     }
+
+    //todo DB indexes?!
+    //todo validation
 }
