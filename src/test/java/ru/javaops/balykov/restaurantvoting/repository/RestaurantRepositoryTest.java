@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting.service;
+package ru.javaops.balykov.restaurantvoting.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
-import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 
 import java.util.List;
 
@@ -42,8 +41,13 @@ class RestaurantRepositoryTest {
                 .isEqualTo(List.of(REST_1, REST_2));
     }
 
-//    @Test
-//    void name() {
-//        new Restaurant()
-//    }
+    @Test
+    void getAllWithTodayDishes() {
+        List<Restaurant> restaurants = repository.findAllWithTodayDishes();
+
+        assertThatList(restaurants)
+                .usingRecursiveComparison()
+                .ignoringFields("dishes.restaurant")
+                .isEqualTo(List.of(REST_1, REST_2));
+    }
 }
