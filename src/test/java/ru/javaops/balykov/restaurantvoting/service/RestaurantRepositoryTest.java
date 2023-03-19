@@ -41,4 +41,9 @@ class RestaurantRepositoryTest {
                 .ignoringFields("dishes")
                 .isEqualTo(List.of(REST_1, REST_2));
     }
+
+//    @Test
+//    void name() {
+//        new Restaurant()
+//    }
 }

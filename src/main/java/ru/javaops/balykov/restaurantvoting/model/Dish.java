@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "restaurant")
+@ToString(callSuper = true)
 public class Dish extends AbstractBaseEntity {
     @Column(nullable = false)
     private String name;
@@ -26,6 +26,7 @@ public class Dish extends AbstractBaseEntity {
     private LocalDate offerDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, int price) {

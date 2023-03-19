@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @MappedSuperclass
-@NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString

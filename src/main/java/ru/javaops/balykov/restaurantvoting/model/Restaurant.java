@@ -8,10 +8,9 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true, exclude = "dishes")
+@ToString(callSuper = true)
 public class Restaurant extends AbstractBaseEntity {
     @Column(nullable = false)
     private String name;
@@ -23,6 +22,7 @@ public class Restaurant extends AbstractBaseEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Dish> dishes;
 
     public Restaurant(Integer id, String name, String description, String address, List<Dish> dishes) {
