@@ -1,12 +1,14 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public abstract class AbstractBaseEntity {
     public static final int START_SEQ = 1000;
     @Id
