@@ -1,6 +1,9 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -21,9 +24,17 @@ public class Restaurant extends AbstractEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @ToString.Exclude
     private List<Dish> dishes;
+
+    public Restaurant(Restaurant r) {
+        this(r.id, r.name, r.description, r.address, new ArrayList<>());
+    }
+
+    public Restaurant(String name, String description, String address) {
+        this(null, name, description, address, new ArrayList<>());
+    }
 
     public Restaurant(Integer id, String name, String description, String address, List<Dish> dishes) {
         super(id);
@@ -34,5 +45,6 @@ public class Restaurant extends AbstractEntity {
     }
 
     //todo DB indexes?!
+    //todo unique
     //todo validation
 }

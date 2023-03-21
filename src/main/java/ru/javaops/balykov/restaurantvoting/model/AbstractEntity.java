@@ -2,6 +2,7 @@ package ru.javaops.balykov.restaurantvoting.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.domain.Persistable;
 
 import java.util.Objects;
 
@@ -11,12 +12,18 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Persistable<Integer> {
     public static final int START_SEQ = 1000;
     @Id
     @SequenceGenerator(name = "main_seq", sequenceName = "main_seq", allocationSize = 1, initialValue = START_SEQ)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_seq")
-    private Integer id;
+    protected Integer id;
+
+    @Transient
+    @Override
+    public boolean isNew() {
+        return id == null;
+    }
 
     @Override
     public boolean equals(Object o) {
