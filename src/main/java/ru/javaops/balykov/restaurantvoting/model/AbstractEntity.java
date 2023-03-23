@@ -19,6 +19,9 @@ public abstract class AbstractEntity implements Persistable<Integer> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_seq")
     protected Integer id;
 
+    @Column(nullable = false)
+    protected String name;
+
     @Transient
     @Override
     public boolean isNew() {

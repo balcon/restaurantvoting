@@ -10,5 +10,14 @@ VALUES (3, 'Duck roasted in sweet soy sauce', 'Duck breast fillet, sweet soy sau
 
 -- Yesterday's dishes
 INSERT INTO DISH (ID, NAME, PRICE, RESTAURANT_ID, OFFER_DATE)
-VALUES (90, 'Yesterday''s dish', 100, 1, CURRENT_DATE() - 1),
-       (91, 'Yesterday''s dish', 100, 2, CURRENT_DATE() - 1);
+VALUES (50, 'Yesterday''s dish', 100, 1, CURRENT_DATE() - 1),
+       (51, 'Yesterday''s dish', 100, 2, CURRENT_DATE() - 1);
+
+INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD)
+VALUES (20, 'User', 'user@mail.ru', 'password'),
+       (21, 'Admin', 'admin@mail.ru', 'password');
+
+INSERT INTO USER_ROLE (USER_ID, ROLE)
+VALUES (20, 'ROLE_USER'),
+       (21, 'ROLE_USER'),
+       (21, 'ROLE_ADMIN');

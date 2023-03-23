@@ -11,8 +11,6 @@ import java.time.LocalDate;
 @Setter
 @ToString(callSuper = true)
 public class Dish extends AbstractEntity {
-    @Column(nullable = false)
-    private String name;
 
     private String description;
 
@@ -45,8 +43,7 @@ public class Dish extends AbstractEntity {
     }
 
     public Dish(Integer id, String name, String description, int price, LocalDate offerDate) {
-        super(id);
-        this.name = name;
+        super(id, name);
         this.description = description;
         this.price = price;
         this.offerDate = offerDate;

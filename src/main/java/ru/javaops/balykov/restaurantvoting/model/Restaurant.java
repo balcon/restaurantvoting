@@ -18,9 +18,6 @@ import java.util.List;
 @ToString(callSuper = true)
 public class Restaurant extends AbstractEntity {
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -40,8 +37,7 @@ public class Restaurant extends AbstractEntity {
     }
 
     public Restaurant(Integer id, String name, String description, String address, List<Dish> dishes) {
-        super(id);
-        this.name = name;
+        super(id, name);
         this.description = description;
         this.address = address;
         this.dishes = new ArrayList<>(dishes);

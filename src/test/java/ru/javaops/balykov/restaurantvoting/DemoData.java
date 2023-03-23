@@ -2,10 +2,15 @@ package ru.javaops.balykov.restaurantvoting;
 
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
+import ru.javaops.balykov.restaurantvoting.model.User;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
+
+import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_ADMIN;
+import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 
 public class DemoData {
     public static final int DISH_1_ID = 3;
@@ -28,5 +33,11 @@ public class DemoData {
             new Restaurant(2, "KFC", "Fast food", "Sredniy Prospect, Vasilievsky island 38/40", REST_2_DISHES);
 
     public static final Dish YESTERDAYS_DISH =
-            new Dish(90, "Yesterday's dish", null, 100, LocalDate.now().minus(1, ChronoUnit.DAYS));
+            new Dish(50, "Yesterday's dish", null, 100, LocalDate.now().minus(1, ChronoUnit.DAYS));
+
+    public static final int USER_1_ID = 20;
+    public static final User USER_1 =
+            new User(USER_1_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
+    public static final User USER_2 =
+            new User(21, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
 }
