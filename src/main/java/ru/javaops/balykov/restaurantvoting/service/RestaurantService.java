@@ -1,6 +1,7 @@
 package ru.javaops.balykov.restaurantvoting.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
@@ -18,7 +19,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by("name"));
     }
 
     public List<Restaurant> getAllWithDishesByDate(LocalDate date) {
@@ -31,8 +32,16 @@ public class RestaurantService {
 
     public Restaurant save(Restaurant restaurant) {
         if (!restaurant.isNew()) {
-            return null;
+            return null; // todo exception?
         }
         return repository.save(restaurant);
+    }
+
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+    public void update(Restaurant restaurant) {
+        repository.save(restaurant);
     }
 }

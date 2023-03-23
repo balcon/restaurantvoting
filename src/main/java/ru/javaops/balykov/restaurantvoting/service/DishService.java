@@ -32,4 +32,12 @@ public class DishService {
         dish.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
         return repository.save(dish);
     }
+
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+    public void update(Dish dish) {
+        repository.save(dish);
+    }
 }

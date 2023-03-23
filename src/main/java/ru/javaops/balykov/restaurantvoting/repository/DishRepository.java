@@ -6,6 +6,8 @@ import ru.javaops.balykov.restaurantvoting.model.Dish;
 import java.time.LocalDate;
 import java.util.List;
 
+// Todo ??
+//@Transactional(readOnly = true)
 public interface DishRepository extends JpaRepository<Dish, Integer> {
     List<Dish> findAllByRestaurantIdAndOfferDate(int restaurantId, LocalDate date);
 }

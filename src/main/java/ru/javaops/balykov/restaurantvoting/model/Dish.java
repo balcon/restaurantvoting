@@ -27,6 +27,11 @@ public class Dish extends AbstractEntity {
     @ToString.Exclude
     private Restaurant restaurant;
 
+    public Dish(Dish d) {
+        this(d.id, d.name, d.description, d.price, d.offerDate);
+        restaurant = d.restaurant;
+    }
+
     public Dish(String name, int price) {
         this(null, name, null, price);
     }
