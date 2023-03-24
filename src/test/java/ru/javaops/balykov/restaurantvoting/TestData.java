@@ -12,7 +12,7 @@ import java.util.Set;
 import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_ADMIN;
 import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 
-public class DemoData {
+public class TestData {
     public static final int DISH_1_ID = 3;
     public static final Dish DISH_1 =
             new Dish(DISH_1_ID, "Duck roasted in sweet soy sauce",
@@ -40,4 +40,5 @@ public class DemoData {
             new User(USER_1_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
     public static final User USER_2 =
             new User(21, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
+    public static final List<User> USERS = List.of(USER_2, USER_1);
 }

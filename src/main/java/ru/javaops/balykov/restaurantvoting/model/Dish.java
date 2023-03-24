@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Dish extends AbstractEntity {
+public class Dish extends NamedEntity {
 
     private String description;
 

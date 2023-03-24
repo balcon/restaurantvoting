@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Restaurant extends AbstractEntity {
+public class Restaurant extends NamedEntity {
     @Column(nullable = false)
     private String description;
 
@@ -26,7 +26,7 @@ public class Restaurant extends AbstractEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    private List<Dish> dishes;
+    private List<Dish> dishes; //todo BatchSize?
 
     public Restaurant(Restaurant r) {
         this(r.id, r.name, r.description, r.address, new ArrayList<>());

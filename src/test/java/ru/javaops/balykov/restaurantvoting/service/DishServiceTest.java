@@ -5,19 +5,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.balykov.restaurantvoting.TestUtil;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static ru.javaops.balykov.restaurantvoting.DemoData.*;
+import static ru.javaops.balykov.restaurantvoting.TestData.*;
+import static ru.javaops.balykov.restaurantvoting.TestUtil.assertRecursiveEquals;
 
 @SpringBootTest
 @Transactional
 class DishServiceTest {
-    public static final RecursiveComparisonConfiguration REST_IGNORE =
+    public static final RecursiveComparisonConfiguration RESTAURANT_IGNORE =
             RecursiveComparisonConfiguration.builder().withIgnoredFields("restaurant").build();
 
     @Autowired
@@ -27,7 +28,7 @@ class DishServiceTest {
     void get() {
         Dish dish = service.get(DISH_1_ID);
 
-        assertEquals(dish, DISH_1);
+        TestUtil.assertRecursiveEquals(dish, DISH_1, RESTAURANT_IGNORE);
     }
 
     @Test
@@ -36,14 +37,14 @@ class DishServiceTest {
         Integer id = service.save(dish, REST_1_ID).getId();
         dish.setId(id);
 
-        assertEquals(service.get(id), dish);
+        TestUtil.assertRecursiveEquals(service.get(id), dish, RESTAURANT_IGNORE);
     }
 
     @Test
     void getAll() {
         List<Dish> dishes = service.getAllByDate(REST_1_ID, LocalDate.now());
 
-        assertEquals(dishes, REST_1_DISHES);
+        assertRecursiveEquals(dishes, REST_1_DISHES, RESTAURANT_IGNORE);
     }
 
 
@@ -53,7 +54,7 @@ class DishServiceTest {
         ArrayList<Dish> dishes = new ArrayList<>(REST_1_DISHES);
         dishes.remove(DISH_1);
 
-        assertEquals(service.getAllByDate(REST_1_ID, LocalDate.now()), dishes);
+        assertRecursiveEquals(service.getAllByDate(REST_1_ID, LocalDate.now()), dishes, RESTAURANT_IGNORE);
     }
 
     @Test
@@ -62,18 +63,6 @@ class DishServiceTest {
         dish.setName("New name");
         service.update(dish);
 
-        assertEquals(service.get(dish.getId()), dish);
-    }
-
-    private static void assertEquals(Dish actual, Dish expected) {
-        assertThat(actual)
-                .usingRecursiveComparison(REST_IGNORE)
-                .isEqualTo(expected);
-    }
-
-    private static void assertEquals(List<Dish> actual, List<Dish> expected) {
-        assertThat(actual)
-                .usingRecursiveComparison(REST_IGNORE)
-                .isEqualTo(expected);
+        TestUtil.assertRecursiveEquals(service.get(dish.getId()), dish, RESTAURANT_IGNORE);
     }
 }
