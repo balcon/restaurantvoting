@@ -11,9 +11,6 @@ import java.time.LocalDate;
 @Setter
 @ToString(callSuper = true)
 public class Dish extends NamedEntity {
-
-    private String description;
-
     @Column(nullable = false)
     private Integer price;
 
@@ -26,25 +23,20 @@ public class Dish extends NamedEntity {
     private Restaurant restaurant;
 
     public Dish(Dish d) {
-        this(d.id, d.name, d.description, d.price, d.offerDate);
+        this(d.id, d.name, d.price, d.offerDate);
         restaurant = d.restaurant;
     }
 
     public Dish(String name, int price) {
-        this(null, name, null, price);
+        this(null, name, price);
     }
 
     public Dish(Integer id, String name, int price) {
-        this(id, name, null, price);
+        this(id, name, price, LocalDate.now());
     }
 
-    public Dish(Integer id, String name, String description, int price) {
-        this(id, name, description, price, LocalDate.now());
-    }
-
-    public Dish(Integer id, String name, String description, int price, LocalDate offerDate) {
+    public Dish(Integer id, String name, int price, LocalDate offerDate) {
         super(id, name);
-        this.description = description;
         this.price = price;
         this.offerDate = offerDate;
     }

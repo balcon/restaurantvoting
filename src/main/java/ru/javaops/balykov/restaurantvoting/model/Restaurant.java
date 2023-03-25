@@ -1,9 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,9 +15,6 @@ import java.util.List;
 @ToString(callSuper = true)
 public class Restaurant extends NamedEntity {
     @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
@@ -29,16 +23,15 @@ public class Restaurant extends NamedEntity {
     private List<Dish> dishes; //todo BatchSize?
 
     public Restaurant(Restaurant r) {
-        this(r.id, r.name, r.description, r.address, new ArrayList<>());
+        this(r.id, r.name, r.address, new ArrayList<>());
     }
 
-    public Restaurant(String name, String description, String address) {
-        this(null, name, description, address, new ArrayList<>());
+    public Restaurant(String name, String address) {
+        this(null, name, address, new ArrayList<>());
     }
 
-    public Restaurant(Integer id, String name, String description, String address, List<Dish> dishes) {
+    public Restaurant(Integer id, String name, String address, List<Dish> dishes) {
         super(id, name);
-        this.description = description;
         this.address = address;
         this.dishes = new ArrayList<>(dishes);
     }

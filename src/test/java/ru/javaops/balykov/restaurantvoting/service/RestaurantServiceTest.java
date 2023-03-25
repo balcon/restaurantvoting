@@ -56,7 +56,7 @@ class RestaurantServiceTest {
 
     @Test
     void save() {
-        Restaurant restaurant = new Restaurant("New Rest", "New Desc", "New Address");
+        Restaurant restaurant = new Restaurant("New Rest", "New Address");
         Integer id = service.save(restaurant).getId();
         restaurant.setId(id);
 
