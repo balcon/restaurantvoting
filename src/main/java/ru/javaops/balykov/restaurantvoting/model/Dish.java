@@ -7,6 +7,7 @@ import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "dishes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter

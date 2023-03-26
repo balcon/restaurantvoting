@@ -1,5 +1,7 @@
 package ru.javaops.balykov.restaurantvoting.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.User;
@@ -10,7 +12,8 @@ import java.util.Set;
 import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_ADMIN;
 import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 
-public class TestData {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TestData {
     // Dishes
     public static final int DISH_1_ID = 3;
     public static final Dish DISH_1 =

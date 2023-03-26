@@ -11,8 +11,8 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import java.util.List;
 import java.util.Set;
 
-import static ru.javaops.balykov.restaurantvoting.TestData.*;
-import static ru.javaops.balykov.restaurantvoting.TestUtil.assertRecursiveEquals;
+import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
+import static ru.javaops.balykov.restaurantvoting.util.TestUtil.assertRecursiveEquals;
 
 @DataJpaTest
 class UserRepositoryTest {
@@ -24,9 +24,9 @@ class UserRepositoryTest {
 
     @Test
     void get() {
-        User user = repository.findById(USER_1_ID).orElseThrow();
+        User user = repository.findById(USER_ID).orElseThrow();
 
-        assertRecursiveEquals(user, USER_1, DUMMY);
+        assertRecursiveEquals(user, USER, DUMMY);
     }
 
     @Test
@@ -47,7 +47,7 @@ class UserRepositoryTest {
 
     @Test
     void update() {
-        User user = new User(USER_1);
+        User user = new User(USER);
         user.setName("NEW NAME");
         repository.save(user);
 
@@ -56,8 +56,8 @@ class UserRepositoryTest {
 
     @Test
     void delete() {
-        repository.deleteById(USER_1_ID);
+        repository.deleteById(USER_ID);
 
-        assertRecursiveEquals(repository.findAll(), List.of(USER_2), DUMMY);
+        assertRecursiveEquals(repository.findAll(), List.of(ADMIN), DUMMY);
     }
 }

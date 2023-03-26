@@ -1,9 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -12,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "restaurants")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -21,7 +19,7 @@ public class Restaurant extends NamedEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE) //todo dish side?
     @ToString.Exclude
     private List<Dish> dishes; //todo BatchSize?
 
