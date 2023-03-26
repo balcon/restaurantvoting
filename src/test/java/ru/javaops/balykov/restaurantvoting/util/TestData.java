@@ -1,11 +1,9 @@
-package ru.javaops.balykov.restaurantvoting;
+package ru.javaops.balykov.restaurantvoting.util;
 
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.User;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +11,7 @@ import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_ADMIN;
 import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 
 public class TestData {
+    // Dishes
     public static final int DISH_1_ID = 3;
     public static final Dish DISH_1 =
             new Dish(DISH_1_ID, "Duck roasted in sweet soy sauce", 50800);
@@ -23,20 +22,27 @@ public class TestData {
             new Dish(5, "Sanders Basket Lite", 19900),
             new Dish(6, "Nuggets Box", 10400));
 
+    // Restaurants
     public static final int REST_1_ID = 1;
 
     public static final Restaurant REST_1 =
             new Restaurant(REST_1_ID, "Tang-Zhen", "Nevsky Prospect 74", REST_1_DISHES);
     public static final Restaurant REST_2 =
             new Restaurant(2, "KFC", "Sredniy Prospect, Vasilievsky island 38/40", REST_2_DISHES);
+    public static final Restaurant REST_3 =
+            new Restaurant(3, "Without today's dish", "Any address", null);
 
     public static final Dish YESTERDAYS_DISH =
-            new Dish(50, "Yesterday's dish", 100, LocalDate.now().minus(1, ChronoUnit.DAYS));
+            new Dish(50, "Yesterday's dish", 100, DateTimeUtil.currentDate().minusDays(1));
 
-    public static final int USER_1_ID = 20;
-    public static final User USER_1 =
-            new User(USER_1_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
-    public static final User USER_2 =
+    // Users
+    public static final int USER_ID = 20;
+    public static final User USER =
+            new User(USER_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
+    public static final User ADMIN =
             new User(21, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
-    public static final List<User> USERS = List.of(USER_2, USER_1);
+    public static final List<User> USERS = List.of(ADMIN, USER);
+
+    // Votes
+//    public static final
 }

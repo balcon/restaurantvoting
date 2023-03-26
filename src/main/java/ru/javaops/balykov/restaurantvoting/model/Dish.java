@@ -2,6 +2,7 @@ package ru.javaops.balykov.restaurantvoting.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 
 import java.time.LocalDate;
 
@@ -32,7 +33,7 @@ public class Dish extends NamedEntity {
     }
 
     public Dish(Integer id, String name, int price) {
-        this(id, name, price, LocalDate.now());
+        this(id, name, price, DateTimeUtil.currentDate());
     }
 
     public Dish(Integer id, String name, int price, LocalDate offerDate) {

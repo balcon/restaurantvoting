@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting;
+package ru.javaops.balykov.restaurantvoting.util;
 
 import org.assertj.core.api.recursive.comparison.RecursiveComparisonConfiguration;
 import ru.javaops.balykov.restaurantvoting.model.BaseEntity;

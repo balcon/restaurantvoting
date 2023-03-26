@@ -1,6 +1,9 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,7 +36,7 @@ public class Restaurant extends NamedEntity {
     public Restaurant(Integer id, String name, String address, List<Dish> dishes) {
         super(id, name);
         this.address = address;
-        this.dishes = new ArrayList<>(dishes);
+        this.dishes = dishes;
     }
 
     //todo DB indexes?!

@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
+import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import static ru.javaops.balykov.restaurantvoting.TestData.*;
-import static ru.javaops.balykov.restaurantvoting.TestUtil.assertRecursiveEquals;
+import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
+import static ru.javaops.balykov.restaurantvoting.util.TestUtil.assertRecursiveEquals;
 
 @SpringBootTest
 @Transactional
@@ -35,12 +35,12 @@ class RestaurantServiceTest {
     void getAll() {
         List<Restaurant> restaurants = service.getAll();
 
-        assertRecursiveEquals(restaurants, List.of(REST_2, REST_1), DISHES_IGNORE);
+        assertRecursiveEquals(restaurants, List.of(REST_2, REST_1, REST_3), DISHES_IGNORE);
     }
 
     @Test
     void getAllWithTodaysDishes() {
-        List<Restaurant> restaurants = service.getAllWithDishesByDate(LocalDate.now());
+        List<Restaurant> restaurants = service.getAllWithDishesByDate(DateTimeUtil.currentDate());
 
         assertRecursiveEquals(restaurants, List.of(REST_2, REST_1), DISH_REST_IGNORE);
     }
@@ -67,7 +67,7 @@ class RestaurantServiceTest {
     void delete() {
         service.delete(REST_1_ID);
 
-        assertRecursiveEquals(service.getAll(), List.of(REST_2), DISHES_IGNORE);
+        assertRecursiveEquals(service.getAll(), List.of(REST_2, REST_3), DISHES_IGNORE);
     }
 
     @Test

@@ -23,7 +23,7 @@ public class RestaurantService {
     }
 
     public List<Restaurant> getAllWithDishesByDate(LocalDate date) {
-        return repository.findAllWithDishesByDate(date);
+        return repository.findAllWithDishesAndVotesByDate(date);
     }
 
     public Restaurant getWithDishes(int id) {
