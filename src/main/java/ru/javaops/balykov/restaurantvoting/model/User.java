@@ -1,10 +1,7 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.Set;
@@ -14,11 +11,13 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class User extends NamedEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
+    @ToString.Exclude
     private String password;
 
     @Enumerated(EnumType.STRING)
