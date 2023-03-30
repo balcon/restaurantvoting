@@ -9,6 +9,9 @@ spring:
       jakarta.persistence.sharedCache.mode: UNSPECIFIED
     hibernate.ddl-auto: create-drop
     defer-datasource-initialization: true
+    # https://habr.com/ru/post/440734/
+    open-in-view: false
   datasource.url: jdbc:h2:mem:restaurant_voting;DB_CLOSE_ON_EXIT=FALSE
+
   output.ansi.enabled: always
   main.banner-mode: off
