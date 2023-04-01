@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
@@ -22,6 +23,7 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @ToString.Exclude
+    @JsonIgnore
     private Restaurant restaurant;
 
     public Dish(Dish d) {

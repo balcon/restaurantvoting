@@ -40,12 +40,12 @@ public final class TestData {
 
     // Users
     public static final int USER_ID = 20;
+    public static final int ADMIN_ID = 21;
     public static final User USER =
             new User(USER_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
     public static final User ADMIN =
-            new User(21, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
+            new User(ADMIN_ID, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
     public static final List<User> USERS = List.of(ADMIN, USER);
-
-    // Votes
-//    public static final
+    public static final User NEW_USER = new User("New user", "new_mail@mail.ru", "secret");
+    public static final int NON_EXISTENT_ID = 29;
 }

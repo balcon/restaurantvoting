@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -17,6 +18,7 @@ public class User extends NamedEntity {
     private String email;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ToString.Exclude
     private String password;
 
@@ -29,6 +31,10 @@ public class User extends NamedEntity {
 
     public User(User u) {
         this(u.id, u.name, u.email, u.password, Set.copyOf(u.roles));
+    }
+
+    public User(String name, String email, String password) {
+        this(null, name, email, password, null);
     }
 
     public User(String name, String email, String password, Set<Role> roles) {
