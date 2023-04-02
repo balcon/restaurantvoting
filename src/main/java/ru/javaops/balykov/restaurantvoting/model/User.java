@@ -30,7 +30,7 @@ public class User extends NamedEntity {
     private Set<Role> roles;
 
     public User(User u) {
-        this(u.id, u.name, u.email, u.password, Set.copyOf(u.roles));
+        this(u.id, u.name, u.email, u.password, u.roles); // todo copy collection
     }
 
     public User(String name, String email, String password) {

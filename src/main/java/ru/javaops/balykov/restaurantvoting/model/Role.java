@@ -6,5 +6,5 @@ public enum Role {
     ROLE_USER,
     ROLE_ADMIN;
 
-    public static final Set<Role> DEFAUT_ROLES = Set.of(ROLE_USER);
+    public static final Set<Role> DEFAULT_ROLES = Set.of(ROLE_USER);
 }

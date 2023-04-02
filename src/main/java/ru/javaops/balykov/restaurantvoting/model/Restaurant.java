@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -21,6 +22,7 @@ public class Restaurant extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE) //todo dish side?
     @ToString.Exclude
+    @JsonIgnore // todo write normal mapper
     private List<Dish> dishes; //todo BatchSize?
 
     public Restaurant(Restaurant r) {
