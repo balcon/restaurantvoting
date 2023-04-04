@@ -16,13 +16,14 @@ import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 public final class TestData {
     // Dishes
     public static final int DISH_1_ID = 3;
+    public static final int DISH_3_ID = 5;
     public static final Dish DISH_1 =
             new Dish(DISH_1_ID, "Duck roasted in sweet soy sauce", 50800);
     public static final Dish DISH_2 =
             new Dish(4, "Soup with tomatoes and eggs", 15800);
     public static final List<Dish> REST_1_DISHES = List.of(DISH_1, DISH_2);
     public static final List<Dish> REST_2_DISHES = List.of(
-            new Dish(5, "Sanders Basket Lite", 19900),
+            new Dish(DISH_3_ID, "Sanders Basket Lite", 19900),
             new Dish(6, "Nuggets Box", 10400));
 
     // Restaurants
