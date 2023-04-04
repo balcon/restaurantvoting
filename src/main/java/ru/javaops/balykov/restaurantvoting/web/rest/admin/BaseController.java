@@ -14,12 +14,10 @@ import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public abstract class AbstractController<T extends BaseEntity> {
+public abstract class BaseController<T extends BaseEntity> {
     private final JpaRepository<T, Integer> repository;
 
     private final Logger log;
-
-    private final Sort baseSort;
 
     @PostMapping
     public ResponseEntity<T> create(@RequestBody T entity) {
@@ -36,11 +34,11 @@ public abstract class AbstractController<T extends BaseEntity> {
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<T> getAll() {
+    //    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+    public List<T> getAll(Sort sort) {
         log.info("Get all");
-        return repository.findAll(baseSort);
+        return repository.findAll(sort);
     }
 
     @PutMapping("/{id}")
@@ -55,6 +53,7 @@ public abstract class AbstractController<T extends BaseEntity> {
         if (!repository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        // todo action?
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

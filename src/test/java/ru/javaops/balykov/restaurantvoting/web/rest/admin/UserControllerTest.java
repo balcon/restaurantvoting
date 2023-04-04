@@ -22,7 +22,7 @@ import static ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class UserControllerTest extends AbstractControllerTest {
+class UserControllerTest extends BaseControllerTest {
 
     public UserControllerTest(@Autowired UserRepository repository) {
         super(repository, BASE_URL);

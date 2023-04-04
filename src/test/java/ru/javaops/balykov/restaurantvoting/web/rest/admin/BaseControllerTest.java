@@ -18,14 +18,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javaops.balykov.restaurantvoting.util.TestData.USER;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 //@RequiredArgsConstructor
-abstract class AbstractControllerTest {
+abstract class BaseControllerTest {
     private static final int BAD_ID = -1;
 
     @Autowired
@@ -38,7 +37,7 @@ abstract class AbstractControllerTest {
 
     private final String baseUrl;
 
-    public AbstractControllerTest(JpaRepository<? extends BaseEntity, Integer> repository, String baseUrl) {
+    public BaseControllerTest(JpaRepository<? extends BaseEntity, Integer> repository, String baseUrl) {
         this.repository = repository;
         this.baseUrl = baseUrl;
     }
@@ -57,7 +56,7 @@ abstract class AbstractControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(asJson(entity)))
                 .andDo(print())
-                .andExpect(status().is(400));
+                .andExpect(status().isBadRequest());
     }
 
     void getById(int id, BaseEntity entity) throws Exception {
@@ -77,7 +76,7 @@ abstract class AbstractControllerTest {
     void getNotExists(int id) throws Exception {
         mockMvc.perform(get(baseUrl + "/" + id))
                 .andDo(print())
-                .andExpect(status().is(404));
+                .andExpect(status().isNotFound());
     }
 
     void deleteById(int id) throws Exception {
@@ -101,7 +100,7 @@ abstract class AbstractControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(asJson(baseEntity)))
                 .andDo(print())
-                .andExpect(status().is(404));
+                .andExpect(status().isNotFound());
     }
 
     void updateDifferentId(int id, BaseEntity baseEntity) throws Exception {
@@ -109,7 +108,7 @@ abstract class AbstractControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content(asJson(baseEntity)))
                 .andDo(print())
-                .andExpect(status().is(400));
+                .andExpect(status().isBadRequest());
     }
 
     protected String asJson(BaseEntity entity) throws JsonProcessingException {

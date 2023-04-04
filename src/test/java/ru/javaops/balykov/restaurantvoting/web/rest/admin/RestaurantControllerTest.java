@@ -9,7 +9,7 @@ import java.util.List;
 
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 
-class RestaurantControllerTest extends AbstractControllerTest {
+class RestaurantControllerTest extends BaseControllerTest {
 
     public RestaurantControllerTest(@Autowired RestaurantRepository repository) {
         super(repository, RestaurantController.BASE_URL);
