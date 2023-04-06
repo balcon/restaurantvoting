@@ -23,15 +23,31 @@ public class UserController extends BaseController<User> {
         super(repository, log);
     }
 
-    @Override
+    @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         user.setRoles(Role.DEFAULT_ROLES);
         return super.create(user);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable int id) {
+        return super.getById(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<User> getAll() {
         return super.getAll(Sort.by("name", "email"));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody User entity) {
+        return super.update(id, entity);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        super.delete(id);
     }
 }

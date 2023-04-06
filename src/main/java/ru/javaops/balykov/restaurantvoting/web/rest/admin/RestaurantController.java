@@ -3,10 +3,8 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 
@@ -24,9 +22,30 @@ public class RestaurantController extends BaseController<Restaurant> {
         super(repository, log);
     }
 
+    @PostMapping
+    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+        return super.create(restaurant);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Restaurant> getById(@PathVariable int id) {
+        return super.getById(id);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Restaurant> getAll() {
         return super.getAll(Sort.by("name", "id"));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Restaurant restaurant) {
+        return super.update(id, restaurant);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        super.delete(id);
     }
 }

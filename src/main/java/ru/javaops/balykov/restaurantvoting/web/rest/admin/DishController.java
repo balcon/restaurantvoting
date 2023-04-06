@@ -1,11 +1,9 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
@@ -14,28 +12,29 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
-@RequiredArgsConstructor
 @Slf4j
-public class DishController {
+public class DishController extends BaseController<Dish> {
     protected static final String BASE_URL = API_URL + "/admin/dishes";
     protected static final String RESTAURANT_URL = API_URL + "/admin/restaurants/{restaurantId}/dishes";
 
     private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;
 
+    public DishController(DishRepository repository, RestaurantRepository restaurantRepository) {
+        super(repository, log);
+        this.repository = repository;
+        this.restaurantRepository = restaurantRepository;
+    }
+
     @PostMapping(RESTAURANT_URL)
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @RequestBody Dish dish) {
-        if (!dish.isNew()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
         dish.setRestaurant(proxy);
-        return new ResponseEntity<>(repository.save(dish), HttpStatus.CREATED);
+        return super.create(dish);
     }
 
     @GetMapping(BASE_URL + "/{id}")
@@ -46,7 +45,7 @@ public class DishController {
     @GetMapping(BASE_URL)
     @ResponseStatus(HttpStatus.OK)
     public List<Dish> getAll() {
-        return repository.findAll(); //todo sort
+        return super.getAll(Sort.unsorted());
     }
 
     @GetMapping(RESTAURANT_URL)
@@ -61,23 +60,13 @@ public class DishController {
     }
 
     @PutMapping(BASE_URL + "/{id}")
-    @Transactional
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody Dish dish) {
-        if (dish.isNew()) {
-            dish.setId(id);
-        } else if (!Objects.equals(dish.getId(), id)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (!repository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        repository.save(dish);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return super.update(id, dish);
     }
 
     @DeleteMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        repository.deleteById(id);
+        super.delete(id);
     }
 }
