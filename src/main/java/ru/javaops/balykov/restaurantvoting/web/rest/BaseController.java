@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting.web.rest.admin;
+package ru.javaops.balykov.restaurantvoting.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ public abstract class BaseController<T extends BaseEntity> {
 
     private final Logger log;
 
-    public ResponseEntity<T> create(T entity) {
+    protected ResponseEntity<T> create(T entity) {
         log.info("Create [{}]", entity);
         if (!entity.isNew()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -25,17 +25,17 @@ public abstract class BaseController<T extends BaseEntity> {
         return new ResponseEntity<>(repository.save(entity), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<T> getById(int id) {
+    protected ResponseEntity<T> getById(int id) {
         log.info("Get by id [{}]", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    public List<T> getAll(Sort sort) {
+    protected List<T> getAll(Sort sort) {
         log.info("Get all");
         return repository.findAll(sort);
     }
 
-    public ResponseEntity<?> update(int id, T entity) {
+    protected ResponseEntity<?> update(int id, T entity) {
         log.info("Update [{}] with id [{}]", entity, id);
         if (entity.isNew()) {
             entity.setId(id);
@@ -49,7 +49,7 @@ public abstract class BaseController<T extends BaseEntity> {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    public void delete(int id) {
+    protected void delete(int id) {
         log.info("Delete with id [{}]", id);
         repository.deleteById(id);
     }

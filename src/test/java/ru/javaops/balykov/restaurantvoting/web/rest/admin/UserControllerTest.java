@@ -9,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
+import ru.javaops.balykov.restaurantvoting.web.rest.BaseControllerTest;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,7 +74,7 @@ class UserControllerTest extends BaseControllerTest {
     @Test
     void update() throws Exception {
         User user = new User(USER);
-        int id = user.getId();
+        int id = Objects.requireNonNull(user.getId());
         user.setName("New name");
         super.update(id, user);
 

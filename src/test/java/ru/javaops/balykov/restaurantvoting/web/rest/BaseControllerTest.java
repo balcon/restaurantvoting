@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting.web.rest.admin;
+package ru.javaops.balykov.restaurantvoting.web.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,14 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 //@RequiredArgsConstructor
-abstract class BaseControllerTest {
+public abstract class BaseControllerTest {
     private static final int BAD_ID = -1;
 
     @Autowired
-    MockMvc mockMvc;
+    protected MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper mapper;
+    protected ObjectMapper mapper;
 
     private final JpaRepository<? extends BaseEntity, Integer> repository;
 
@@ -42,7 +42,7 @@ abstract class BaseControllerTest {
         this.baseUrl = baseUrl;
     }
 
-    void create(BaseEntity entity) throws Exception {
+    protected void create(BaseEntity entity) throws Exception {
         mockMvc.perform(post(baseUrl)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(entity)))
@@ -51,7 +51,7 @@ abstract class BaseControllerTest {
                 .andExpect(content().json(asJson(entity)));
     }
 
-    void createNotNew(BaseEntity entity) throws Exception {
+    protected void createNotNew(BaseEntity entity) throws Exception {
         mockMvc.perform(post(baseUrl)
                         .contentType(APPLICATION_JSON)
                         .content(asJson(entity)))
@@ -59,27 +59,27 @@ abstract class BaseControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    void getById(int id, BaseEntity entity) throws Exception {
+    protected void getById(int id, BaseEntity entity) throws Exception {
         mockMvc.perform(get(baseUrl + "/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(asJson(entity)));
     }
 
-    void getAll(List<BaseEntity> entities) throws Exception {
+    protected void getAll(List<BaseEntity> entities) throws Exception {
         mockMvc.perform(get(baseUrl))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(entities)));
     }
 
-    void getNotExists(int id) throws Exception {
+    protected void getNotExists(int id) throws Exception {
         mockMvc.perform(get(baseUrl + "/" + id))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
-    void deleteById(int id) throws Exception {
+    protected void deleteById(int id) throws Exception {
         mockMvc.perform(delete(baseUrl + "/" + id))
                 .andDo(print())
                 .andExpect(status().isNoContent());
@@ -87,7 +87,7 @@ abstract class BaseControllerTest {
         Assertions.assertThat(repository.existsById(id)).isFalse();
     }
 
-    void update(int id, BaseEntity baseEntity) throws Exception {
+    protected void update(int id, BaseEntity baseEntity) throws Exception {
         mockMvc.perform(put(baseUrl + "/" + id)
                         .contentType(APPLICATION_JSON)
                         .content(asJson(baseEntity)))
@@ -95,7 +95,7 @@ abstract class BaseControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    void updateNotExists(BaseEntity baseEntity) throws Exception {
+    protected void updateNotExists(BaseEntity baseEntity) throws Exception {
         mockMvc.perform(put(baseUrl + "/" + BAD_ID)
                         .contentType(APPLICATION_JSON)
                         .content(asJson(baseEntity)))
@@ -103,7 +103,7 @@ abstract class BaseControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    void updateDifferentId(int id, BaseEntity baseEntity) throws Exception {
+    protected void updateDifferentId(int id, BaseEntity baseEntity) throws Exception {
         mockMvc.perform(put(baseUrl + "/" + id)
                         .contentType(APPLICATION_JSON)
                         .content(asJson(baseEntity)))

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
+import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import java.util.List;
 

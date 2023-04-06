@@ -13,6 +13,7 @@ import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -42,6 +43,7 @@ class DishControllerTest {
     @Test
     void create() throws Exception {
         Dish newDish = new Dish("New dish", 10000);
+        newDish.setOfferDate(null); // TODO: 06.04.2023 Default offer date
         mockMvc.perform(post(RESTAURANT_URL)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(newDish)))
@@ -104,7 +106,7 @@ class DishControllerTest {
     void update() throws Exception {
         Dish dish = new Dish(DISH_1);
         dish.setName("New name");
-        int id = dish.getId();
+        int id = Objects.requireNonNull(dish.getId());
 
         mockMvc.perform(put(BASE_URL + "/" + id)
                         .contentType(APPLICATION_JSON)

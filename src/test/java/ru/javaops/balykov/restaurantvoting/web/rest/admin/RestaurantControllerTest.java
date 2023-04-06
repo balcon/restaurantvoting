@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
+import ru.javaops.balykov.restaurantvoting.web.rest.BaseControllerTest;
 
 import java.util.List;
+import java.util.Objects;
 
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 
@@ -52,7 +54,7 @@ class RestaurantControllerTest extends BaseControllerTest {
     @Test
     void update() throws Exception {
         Restaurant restaurant = new Restaurant(REST_1);
-        int id = restaurant.getId();
+        int id = Objects.requireNonNull(restaurant.getId());
         restaurant.setName("New name");
         super.update(id, restaurant);
 

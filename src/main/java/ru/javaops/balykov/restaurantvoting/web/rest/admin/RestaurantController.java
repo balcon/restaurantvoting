@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
+import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import java.util.List;
 
