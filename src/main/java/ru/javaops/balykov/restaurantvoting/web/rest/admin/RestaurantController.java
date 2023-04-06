@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping(RestaurantController.BASE_URL)
 @Slf4j
 public class RestaurantController extends BaseController<Restaurant> {
-    protected static final String BASE_URL = "/api/admin/restaurants";
+    protected static final String BASE_URL = "/api/v1/admin/restaurants";
 
     public RestaurantController(RestaurantRepository repository) {
         super(repository, log);

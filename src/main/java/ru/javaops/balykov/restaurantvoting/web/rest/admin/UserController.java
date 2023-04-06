@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
 public class UserController extends BaseController<User> {
-    protected static final String BASE_URL = "/api/admin/users";
+    protected static final String BASE_URL = "/api/v1/admin/users";
 
     public UserController(UserRepository repository) {
         super(repository, log);

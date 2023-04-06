@@ -20,14 +20,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
+import static ru.javaops.balykov.restaurantvoting.web.rest.admin.DishController.BASE_URL;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 class DishControllerTest {
     private static final int RESTAURANT_ID = 1;
-    private static final String RESTAURANT_URL = "/api/admin/restaurants/" + RESTAURANT_ID + "/dishes";
-    private static final String BASE_URL = "/api/admin/dishes";
+    private static final String RESTAURANT_URL =
+            DishController.RESTAURANT_URL.replace("{restaurantId}", Integer.toString(RESTAURANT_ID));
 
     @Autowired
     MockMvc mockMvc;

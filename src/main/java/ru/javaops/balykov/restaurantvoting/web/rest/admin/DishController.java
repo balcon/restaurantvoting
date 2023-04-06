@@ -20,8 +20,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class DishController {
-    protected static final String BASE_URL = "/api/admin/dishes";
-    protected static final String RESTAURANT_URL = "/api/admin/restaurants/{restaurantId}/dishes";
+    protected static final String BASE_URL = "/api/v1/admin/dishes";
+    protected static final String RESTAURANT_URL = "/api/v1/admin/restaurants/{restaurantId}/dishes";
 
     private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;
