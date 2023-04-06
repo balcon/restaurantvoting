@@ -5,6 +5,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.balykov.restaurantvoting.model.Vote;
 import ru.javaops.balykov.restaurantvoting.repository.VoteRepository;
@@ -19,6 +20,7 @@ import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class VoteServiceTest {
     @Autowired
     VoteRepository repository;
@@ -28,9 +30,9 @@ class VoteServiceTest {
 
     @Test
     void voteFirstTime() {
-        service.vote(REST_1, ADMIN);
+        service.vote(REST_1, USER);
 
-        assertThat(repository.existsByUserAndVoteDate(ADMIN, currentDate())).isTrue();
+        assertThat(repository.existsByUserAndVoteDate(USER, currentDate())).isTrue();
     }
 
     @Test
@@ -42,8 +44,8 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            service.vote(REST_2, USER);
-            Vote vote = repository.findByUserAndVoteDate(USER, today).orElseThrow();
+            service.vote(REST_2, ADMIN);
+            Vote vote = repository.findByUserAndVoteDate(ADMIN, today).orElseThrow();
 
             assertThat(vote.getRestaurant()).isEqualTo(REST_2);
         }
@@ -58,7 +60,7 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            assertThrows(IllegalStateException.class, () -> service.vote(REST_2, USER));
+            assertThrows(IllegalStateException.class, () -> service.vote(REST_2, ADMIN));
         }
     }
 }
