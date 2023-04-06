@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,8 +25,11 @@ import static ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController.
 @Transactional
 class UserControllerTest extends BaseControllerTest {
 
+    UserRepository repository;
+
     public UserControllerTest(@Autowired UserRepository repository) {
         super(repository, BASE_URL);
+        this.repository = repository;
     }
 
     @Test
@@ -68,8 +72,12 @@ class UserControllerTest extends BaseControllerTest {
     @Test
     void update() throws Exception {
         User user = new User(USER);
-        Integer id = user.getId();
+        int id = user.getId();
+        user.setName("New name");
         super.update(id, user);
+
+        Assertions.assertThat(repository.findById(id).orElseThrow().getName())
+                .isEqualTo("New name");
     }
 
     @Test

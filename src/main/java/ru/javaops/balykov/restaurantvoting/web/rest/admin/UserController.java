@@ -11,11 +11,13 @@ import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 
 import java.util.List;
 
+import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
+
 @RestController
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
 public class UserController extends BaseController<User> {
-    protected static final String BASE_URL = "/api/v1/admin/users";
+    protected static final String BASE_URL = API_URL + "/admin/users";
 
     public UserController(UserRepository repository) {
         super(repository, log);

@@ -43,17 +43,17 @@ public abstract class BaseController<T extends BaseEntity> {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<T> update(@PathVariable int id, @RequestBody T enity) {
-        log.info("Update [{}] with id [{}]", enity, id);
-        if (enity.isNew()) {
-            enity.setId(id);
-        } else if (!Objects.equals(enity.getId(), id)) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody T entity) {
+        log.info("Update [{}] with id [{}]", entity, id);
+        if (entity.isNew()) {
+            entity.setId(id);
+        } else if (!Objects.equals(entity.getId(), id)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (!repository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        // todo action?
+        repository.save(entity);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

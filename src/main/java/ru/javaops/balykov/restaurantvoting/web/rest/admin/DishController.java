@@ -16,12 +16,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class DishController {
-    protected static final String BASE_URL = "/api/v1/admin/dishes";
-    protected static final String RESTAURANT_URL = "/api/v1/admin/restaurants/{restaurantId}/dishes";
+    protected static final String BASE_URL = API_URL + "/admin/dishes";
+    protected static final String RESTAURANT_URL = API_URL + "/admin/restaurants/{restaurantId}/dishes";
 
     private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;

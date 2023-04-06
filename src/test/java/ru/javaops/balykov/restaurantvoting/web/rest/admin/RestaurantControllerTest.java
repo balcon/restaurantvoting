@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
@@ -11,8 +12,11 @@ import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 
 class RestaurantControllerTest extends BaseControllerTest {
 
+    RestaurantRepository repository;
+
     public RestaurantControllerTest(@Autowired RestaurantRepository repository) {
         super(repository, RestaurantController.BASE_URL);
+        this.repository = repository;
     }
 
     @Test
@@ -49,8 +53,11 @@ class RestaurantControllerTest extends BaseControllerTest {
     void update() throws Exception {
         Restaurant restaurant = new Restaurant(REST_1);
         int id = restaurant.getId();
-
+        restaurant.setName("New name");
         super.update(id, restaurant);
+
+        Assertions.assertThat(repository.findById(id).orElseThrow().getName())
+                .isEqualTo("New name");
     }
 
     @Test
