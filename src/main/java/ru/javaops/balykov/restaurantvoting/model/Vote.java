@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -18,6 +19,7 @@ public class Vote extends BaseEntity { // todo change ID to restaurant + voteDat
     @ManyToOne(fetch = FetchType.EAGER) // todo think about fetch
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.EAGER) // todo think about fetch
