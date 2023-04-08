@@ -15,5 +15,11 @@ spring:
 
   output.ansi.enabled: always
   main.banner-mode: off
+  jackson.visibility:
+    field: any
+    setter: none
+    getter: none
+    is-getter: none
+    creator: none
 logging.level:
   org.springframework.orm.jpa.JpaTransactionManager: DEBUG
