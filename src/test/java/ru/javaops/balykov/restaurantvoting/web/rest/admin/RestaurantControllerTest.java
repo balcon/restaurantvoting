@@ -1,54 +1,63 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
-import ru.javaops.balykov.restaurantvoting.web.rest.BaseControllerTest;
+import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
 import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
+import static ru.javaops.balykov.restaurantvoting.web.rest.admin.RestaurantController.BASE_URL;
 
-class RestaurantControllerTest extends BaseControllerTest {
-
-    RestaurantRepository repository;
-
-    public RestaurantControllerTest(@Autowired RestaurantRepository repository) {
-        super(repository, RestaurantController.BASE_URL);
-        this.repository = repository;
-    }
+class RestaurantControllerTest extends BaseMvcTest {
+    @Autowired
+    private RestaurantRepository repository;
 
     @Test
     void create() throws Exception {
-        super.create(NEW_REST);
+        Restaurant restaurant = new Restaurant("New restaurant", "New Address");
+        long count = repository.count();
+
+        post(BASE_URL, restaurant)
+                .andExpect(status().isCreated());
+//                .andExpect(match(restaurant));
+        repository.flush();
+        assertThat(repository.count()).isEqualTo(count + 1);
     }
 
     @Test
     void createNotNew() throws Exception {
-        super.createNotNew(REST_1);
+        long count = repository.count();
+
+        post(BASE_URL, REST_1)
+                .andExpect(status().isBadRequest());
+        repository.flush();
+        assertThat(repository.count()).isEqualTo(count);
     }
 
     @Test
     void getById() throws Exception {
-        super.getById(REST_1_ID, REST_1);
+        get(BASE_URL + "/" + REST_1_ID)
+                .andExpect(status().isOk())
+                .andExpect(match(REST_1));
     }
 
     @Test
     void getAll() throws Exception {
-        super.getAll(List.of(REST_2, REST_1, REST_3));
+        get(BASE_URL)
+                .andExpect(status().isOk())
+                .andExpect(match(List.of(REST_2, REST_1, REST_3)));
     }
 
     @Test
     void getNotExists() throws Exception {
-        super.getNotExists(-1);
-    }
-
-    @Test
-    void deleteById() throws Exception {
-        super.deleteById(REST_1_ID);
+        get(BASE_URL + "/0")
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -56,21 +65,24 @@ class RestaurantControllerTest extends BaseControllerTest {
         Restaurant restaurant = new Restaurant(REST_1);
         int id = Objects.requireNonNull(restaurant.getId());
         restaurant.setName("New name");
-        super.update(id, restaurant);
 
-        Assertions.assertThat(repository.findById(id).orElseThrow().getName())
+        put(BASE_URL + "/" + id, restaurant)
+                .andExpect(status().isNoContent());
+        repository.flush();
+        assertThat(repository.findById(id).orElseThrow().getName())
                 .isEqualTo("New name");
     }
 
     @Test
-    void updateNotExists() throws Exception {
-        Restaurant restaurant = new Restaurant(REST_1);
-        restaurant.setId(-1);
-        super.updateNotExists(restaurant);
+    void updateDifferentId() throws Exception {
+        put(BASE_URL + "/" + REST_1_ID, REST_2)
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void updateDifferentId() throws Exception {
-        super.updateDifferentId(REST_1_ID, REST_2);
+    void deleteById() throws Exception {
+        delete(BASE_URL+"/"+REST_1_ID)
+                .andExpect(status().isNoContent());
+        assertThat(repository.existsById(REST_1_ID)).isFalse();
     }
 }

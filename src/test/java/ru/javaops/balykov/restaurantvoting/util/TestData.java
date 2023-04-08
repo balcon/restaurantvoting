@@ -42,9 +42,6 @@ public class TestData {
     public final Dish YESTERDAYS_DISH =
             new Dish(50, "Yesterday's dish", 100, DateTimeUtil.currentDate().minusDays(1));
 
-    public final Restaurant NEW_REST =
-            new Restaurant("New restaurant", "New Address");
-
     // Users
     public final int USER_ID = 20;
     public final int ADMIN_ID = 21;
@@ -52,8 +49,6 @@ public class TestData {
             new User(USER_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
     public final User ADMIN =
             new User(ADMIN_ID, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
-
-    public final User NEW_USER = new User("New user", "new_mail@mail.ru", "secret");
 
     // Restaurant with votes
     public final Vote VOTE_ADMIN = new Vote(70, REST_1, ADMIN);
