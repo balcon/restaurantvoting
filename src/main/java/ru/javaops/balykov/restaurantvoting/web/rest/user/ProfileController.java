@@ -35,7 +35,7 @@ public class ProfileController extends BaseController<User> {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody User user) {
+    public ResponseEntity<?> update(@RequestBody User user) { // TODO: 09.04.2023 Password change? 
         int id = Objects.requireNonNull(AuthenticationUtil.getAuthUser().getId());
         return super.update(id, user);
     }

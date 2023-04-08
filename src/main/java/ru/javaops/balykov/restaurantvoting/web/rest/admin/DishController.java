@@ -64,6 +64,9 @@ public class DishController extends BaseController<Dish> {
 
     @PutMapping(BASE_URL + "/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody Dish dish) {
+        // TODO: 09.04.2023 Could be done better?
+        Restaurant restaurant = repository.findById(id).orElseThrow().getRestaurant();
+        dish.setRestaurant(restaurant);
         return super.update(id, dish);
     }
 
