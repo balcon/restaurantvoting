@@ -2,7 +2,9 @@ package ru.javaops.balykov.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 
 import java.time.LocalDate;
@@ -15,6 +17,8 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 public class Dish extends NamedEntity {
     @Column(nullable = false)
+    @NotNull
+    @Range(min = 0, max = 200000)
     private Integer price;
 
     @Column(nullable = false, columnDefinition = "date default CURRENT_DATE()")

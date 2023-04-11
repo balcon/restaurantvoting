@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class DishController extends BaseController<Dish> {
     }
 
     @PostMapping(RESTAURANT_URL)
-    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @RequestBody Dish dish) {
+    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
         dish.setRestaurant(proxy);
         dish.setOfferDate(DateTimeUtil.currentDate()); // TODO: 06.04.2023 Default offer date?
@@ -63,7 +64,7 @@ public class DishController extends BaseController<Dish> {
     }
 
     @PutMapping(BASE_URL + "/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Dish dish) {
+    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody Dish dish) {
         // TODO: 09.04.2023 Could be done better?
         Restaurant restaurant = repository.findById(id).orElseThrow().getRestaurant();
         dish.setRestaurant(restaurant);

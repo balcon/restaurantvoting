@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController extends BaseController<User> {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         user.setRoles(Role.DEFAULT_ROLES);
         return super.create(user);
     }
@@ -42,7 +43,7 @@ public class UserController extends BaseController<User> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody User entity) {
+    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody User entity) {
         return super.update(id, entity);
     }
 

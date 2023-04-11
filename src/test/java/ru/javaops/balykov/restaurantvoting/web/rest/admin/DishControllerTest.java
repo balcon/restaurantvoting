@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.DishController.BASE_URL;
@@ -34,7 +36,8 @@ class DishControllerTest extends BaseMvcTest {
         newDish.setOfferDate(null); // TODO: 06.04.2023 Default offer date
         long dishesCount = repository.count();
         post(RESTAURANT_URL, newDish)
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 //                .andExpect(match(newDish));
         repository.flush();
         assertThat(repository.count()).isEqualTo(dishesCount + 1);
@@ -54,6 +57,7 @@ class DishControllerTest extends BaseMvcTest {
     void getById() throws Exception {
         get(BASE_URL + "/" + DISH_1_ID)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(DISH_1));
     }
 
@@ -61,6 +65,7 @@ class DishControllerTest extends BaseMvcTest {
     void getAll() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(repository.findAll()));
     }
 

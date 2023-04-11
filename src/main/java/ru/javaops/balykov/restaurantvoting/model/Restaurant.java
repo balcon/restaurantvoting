@@ -2,6 +2,8 @@ package ru.javaops.balykov.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,6 +19,8 @@ import java.util.List;
 @ToString(callSuper = true)
 public class Restaurant extends NamedEntity {
     @Column(nullable = false)
+    @NotBlank
+    @Size(min = 8, max = 64)
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
@@ -41,5 +45,4 @@ public class Restaurant extends NamedEntity {
 
     //todo DB indexes?!
     //todo unique
-    //todo validation
 }

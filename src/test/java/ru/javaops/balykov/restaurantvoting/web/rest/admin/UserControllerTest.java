@@ -3,6 +3,7 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController.BASE_URL;
 
@@ -22,13 +23,12 @@ class UserControllerTest extends BaseMvcTest {
 
     @Test
     void create() throws Exception {
-        User user = new User("New user", "new_mail@mail.ru", "secret");
+        User user = new User("New user", "new_mail@mail.ru", "secret_pass");
         user.setRoles(Role.DEFAULT_ROLES); // TODO: 09.04.2023 set default roles??
         long count = repository.count();
 
         post(BASE_URL, asJsonWithPassword(user))
                 .andExpect(status().isCreated());
-//                .andExpect(match(user));
         repository.flush();
         assertThat(repository.count()).isEqualTo(count + 1);
     }
@@ -44,6 +44,7 @@ class UserControllerTest extends BaseMvcTest {
     void getById() throws Exception {
         get(BASE_URL + "/" + USER_ID)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(USER));
     }
 
@@ -51,6 +52,7 @@ class UserControllerTest extends BaseMvcTest {
     void getAll() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(List.of(USER, ADMIN)));
     }
 
@@ -85,6 +87,23 @@ class UserControllerTest extends BaseMvcTest {
                 .andExpect(status().isNoContent());
         assertThat(repository.existsById(USER_ID)).isFalse();
     }
+
+    @Test
+    void validationErrors() throws Exception {
+        post(BASE_URL, asJsonWithPassword(new User("", "not_mail", "short")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.email").exists())
+                .andExpect(jsonPath("$.password").exists());
+    }
+
+    // TODO: 11.04.2023 Implement duplicate mail validation
+//    @Test
+//    void duplicateEmail() throws Exception {
+//        post(BASE_URL, asJsonWithPassword(USER))
+//                .andExpect(status().isBadRequest())
+//                .andExpect(jsonPath("email").exists());
+//    }
 
     // Writing password to json manually because password is write-only in jackson config
     private String asJsonWithPassword(User user) {

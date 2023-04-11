@@ -2,6 +2,7 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.RestaurantController.BASE_URL;
@@ -24,7 +26,8 @@ class RestaurantControllerTest extends BaseMvcTest {
         long count = repository.count();
 
         post(BASE_URL, restaurant)
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 //                .andExpect(match(restaurant));
         repository.flush();
         assertThat(repository.count()).isEqualTo(count + 1);
@@ -44,6 +47,7 @@ class RestaurantControllerTest extends BaseMvcTest {
     void getById() throws Exception {
         get(BASE_URL + "/" + REST_1_ID)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(REST_1));
     }
 
@@ -51,6 +55,7 @@ class RestaurantControllerTest extends BaseMvcTest {
     void getAll() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(match(List.of(REST_2, REST_1, REST_3)));
     }
 
@@ -81,7 +86,7 @@ class RestaurantControllerTest extends BaseMvcTest {
 
     @Test
     void deleteById() throws Exception {
-        delete(BASE_URL+"/"+REST_1_ID)
+        delete(BASE_URL + "/" + REST_1_ID)
                 .andExpect(status().isNoContent());
         assertThat(repository.existsById(REST_1_ID)).isFalse();
     }

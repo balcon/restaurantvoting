@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class RestaurantController extends BaseController<Restaurant> {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         return super.create(restaurant);
     }
 
@@ -40,7 +41,7 @@ public class RestaurantController extends BaseController<Restaurant> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody Restaurant restaurant) {
+    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
         return super.update(id, restaurant);
     }
 

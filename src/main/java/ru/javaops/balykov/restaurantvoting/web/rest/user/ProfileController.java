@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.user;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ProfileController extends BaseController<User> {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         return super.create(user);
     }
 
@@ -35,7 +36,7 @@ public class ProfileController extends BaseController<User> {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody User user) { // TODO: 09.04.2023 Password change? 
+    public ResponseEntity<?> update(@Valid @RequestBody User user) { // TODO: 09.04.2023 Password change?
         int id = Objects.requireNonNull(AuthenticationUtil.getAuthUser().getId());
         return super.update(id, user);
     }
