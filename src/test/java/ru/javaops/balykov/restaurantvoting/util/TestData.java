@@ -1,18 +1,12 @@
 package ru.javaops.balykov.restaurantvoting.util;
 
 import lombok.experimental.UtilityClass;
-import ru.javaops.balykov.restaurantvoting.model.Dish;
-import ru.javaops.balykov.restaurantvoting.model.Restaurant;
-import ru.javaops.balykov.restaurantvoting.model.User;
-import ru.javaops.balykov.restaurantvoting.model.Vote;
+import ru.javaops.balykov.restaurantvoting.model.*;
 import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_ADMIN;
-import static ru.javaops.balykov.restaurantvoting.model.Role.ROLE_USER;
 
 @UtilityClass
 public class TestData {
@@ -45,10 +39,12 @@ public class TestData {
     // Users
     public final int USER_ID = 20;
     public final int ADMIN_ID = 21;
+    public final String USER_EMAIL = "user@mail.ru";
+    public final String ADMIN_EMAIL = "admin@mail.ru";
     public final User USER =
-            new User(USER_ID, "User", "user@mail.ru", "password", Set.of(ROLE_USER));
+            new User(USER_ID, "User", USER_EMAIL, "password", Set.of(Role.USER));
     public final User ADMIN =
-            new User(ADMIN_ID, "Admin", "admin@mail.ru", "password", Set.of(ROLE_USER, ROLE_ADMIN));
+            new User(ADMIN_ID, "Admin", ADMIN_EMAIL, "password", Set.of(Role.USER, Role.ADMIN));
 
     // Restaurant with votes
     public final Vote VOTE_ADMIN = new Vote(70, REST_1, ADMIN);

@@ -26,7 +26,7 @@ public class VoteService {
                 vote.setRestaurant(restaurant);
                 repository.save(vote);
             } else {
-                throw new IllegalStateException(); // TODO: 08.04.2023 throw correct exception
+                throw new UnsupportedOperationException(); // TODO: 13.04.2023 Handle this exception 
             }
         } else {
             repository.save(new Vote(restaurant, user));

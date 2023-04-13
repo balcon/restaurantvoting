@@ -2,10 +2,8 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
@@ -19,9 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.DishController.BASE_URL;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+@WithUserDetails(ADMIN_EMAIL)
 class DishControllerTest extends BaseMvcTest {
     private static final int RESTAURANT_ID = 1;
     private static final String RESTAURANT_URL =

@@ -3,6 +3,7 @@ package ru.javaops.balykov.restaurantvoting.web.rest.user;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javaops.balykov.restaurantvoting.repository.VoteRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.user.RestaurantUserController.BASE_URL;
 
+@WithUserDetails(USER_EMAIL)
 class RestaurantUserControllerTest extends BaseMvcTest {
     @Autowired
     private VoteRepository voteRepository;
@@ -43,6 +45,6 @@ class RestaurantUserControllerTest extends BaseMvcTest {
 
         put(BASE_URL + "/" + REST_1_ID + "/voted")
                 .andExpect(status().isNoContent());
-        assertThat(voteRepository.findByRestaurantAndVoteDate(REST_1, today)).hasSize(count+1);
+        assertThat(voteRepository.findByRestaurantAndVoteDate(REST_1, today)).hasSize(count + 1);
     }
 }

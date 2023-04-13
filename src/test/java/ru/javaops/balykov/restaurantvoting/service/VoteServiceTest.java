@@ -60,7 +60,7 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            assertThrows(IllegalStateException.class, () -> service.vote(REST_2, ADMIN));
+            assertThrows(UnsupportedOperationException.class, () -> service.vote(REST_2, ADMIN));
         }
     }
 }

@@ -11,19 +11,19 @@ VALUES (3, 'Duck roasted in sweet soy sauce', 50800, 1),
 
 -- Yesterday's dishes
 INSERT INTO DISHES (ID, NAME, PRICE, RESTAURANT_ID, OFFER_DATE)
-VALUES (50, 'Yesterday''s dish', 100, 1, CURRENT_DATE() - 1),
-       (51, 'Yesterday''s dish', 100, 3, CURRENT_DATE() - 1);
+VALUES (50, 'Yesterday''s dish', 100, 1, CURRENT_DATE - 1),
+       (51, 'Yesterday''s dish', 100, 3, CURRENT_DATE - 1);
 
 INSERT INTO USERS (ID, NAME, EMAIL, PASSWORD)
-VALUES (20, 'User', 'user@mail.ru', 'password'),
-       (21, 'Admin', 'admin@mail.ru', 'password');
+VALUES (20, 'User', 'user@mail.ru', '{noop}password'),
+       (21, 'Admin', 'admin@mail.ru', '{noop}password');
 
 INSERT INTO USER_ROLES (USER_ID, ROLE)
-VALUES (20, 'ROLE_USER'),
-       (21, 'ROLE_USER'),
-       (21, 'ROLE_ADMIN');
+VALUES (20, 'USER'),
+       (21, 'USER'),
+       (21, 'ADMIN');
 
 INSERT INTO VOTES (ID, RESTAURANT_ID, USER_ID, VOTE_DATE)
-VALUES (70, 1, 21, CURRENT_DATE()),
-       (71, 2, 20, CURRENT_DATE() - 1),
-       (72, 2, 21, CURRENT_DATE() - 1);
+VALUES (70, 1, 21, CURRENT_DATE),
+       (71, 2, 20, CURRENT_DATE - 1),
+       (72, 2, 21, CURRENT_DATE - 1);

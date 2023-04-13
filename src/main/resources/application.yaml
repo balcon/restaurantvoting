@@ -21,5 +21,6 @@ spring:
     getter: none
     is-getter: none
     creator: none
-logging.level:
-  org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+logging.level.org.springframework:
+  orm.jpa.JpaTransactionManager: DEBUG
+  security: DEBUG

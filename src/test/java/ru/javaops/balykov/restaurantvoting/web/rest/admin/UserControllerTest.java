@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
@@ -11,26 +12,29 @@ import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController.BASE_URL;
 
+@WithUserDetails(ADMIN_EMAIL)
 class UserControllerTest extends BaseMvcTest {
     @Autowired
     private UserRepository repository;
 
     @Test
     void create() throws Exception {
-        User user = new User("New user", "new_mail@mail.ru", "secret_pass");
-        user.setRoles(Role.DEFAULT_ROLES); // TODO: 09.04.2023 set default roles??
-        long count = repository.count();
+        String email = "new_mail@mail.ru";
+        User user = new User("New admin", email, "secret_pass");
+        user.setRoles(Set.of(Role.USER, Role.ADMIN)); // TODO: 09.04.2023 set default roles??
 
         post(BASE_URL, asJsonWithPassword(user))
                 .andExpect(status().isCreated());
         repository.flush();
-        assertThat(repository.count()).isEqualTo(count + 1);
+
+        assertThat(repository.findByEmailIgnoreCase(email)).isPresent();
     }
 
 

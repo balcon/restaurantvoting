@@ -4,13 +4,13 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
-import ru.javaops.balykov.restaurantvoting.util.AuthenticationUtil;
+import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-
-import java.util.Objects;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
@@ -26,25 +26,25 @@ public class ProfileController extends BaseController<User> {
 
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody User user) {
+        user.setRoles(Role.DEFAULT_ROLES);
         return super.create(user);
     }
 
     @GetMapping
-    public ResponseEntity<User> getProfile() {
-        int id = Objects.requireNonNull(AuthenticationUtil.getAuthUser().getId());
-        return super.getById(id);
+    public User getAuth(@AuthenticationPrincipal AuthUser authUser) {
+        return authUser.getUser();
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Valid @RequestBody User user) { // TODO: 09.04.2023 Password change?
-        int id = Objects.requireNonNull(AuthenticationUtil.getAuthUser().getId());
-        return super.update(id, user);
+    public ResponseEntity<?> update(@Valid @RequestBody User user,
+                                    @AuthenticationPrincipal AuthUser authUser) { // TODO: 09.04.2023 Password change?
+        // TODO: 13.04.2023 Roles?
+        return super.update(authUser.id(), user);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete() {
-        int id = Objects.requireNonNull(AuthenticationUtil.getAuthUser().getId());
-        super.delete(id);
+    public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        super.delete(authUser.id());
     }
 }
