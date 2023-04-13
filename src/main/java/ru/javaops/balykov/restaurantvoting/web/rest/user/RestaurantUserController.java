@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
-import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.service.VoteService;
 import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
-import ru.javaops.balykov.restaurantvoting.util.AuthenticationUtil;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.util.RestaurantToMapper;
+import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,9 +54,8 @@ public class RestaurantUserController {
 
     @PutMapping("/{id}/voted")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable int id) {
+    public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Vote for restaurant with id [{}]", id);
-        User authUser = AuthenticationUtil.getAuthUser();
-        voteService.vote(repository.getReferenceById(id), authUser); // TODO: 06.04.2023 Exception if illegal vote
+        voteService.vote(repository.getReferenceById(id), authUser.getUser());
     }
 }

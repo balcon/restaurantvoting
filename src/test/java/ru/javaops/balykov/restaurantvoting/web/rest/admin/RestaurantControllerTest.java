@@ -3,6 +3,7 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.RestaurantController.BASE_URL;
 
+@WithUserDetails(ADMIN_EMAIL)
 class RestaurantControllerTest extends BaseMvcTest {
     @Autowired
     private RestaurantRepository repository;
@@ -89,5 +91,12 @@ class RestaurantControllerTest extends BaseMvcTest {
         delete(BASE_URL + "/" + REST_1_ID)
                 .andExpect(status().isNoContent());
         assertThat(repository.existsById(REST_1_ID)).isFalse();
+    }
+
+    @Test
+    @WithUserDetails(USER_EMAIL)
+    void nonAdminAccess() throws Exception {
+        get(BASE_URL)
+                .andExpect(status().isForbidden());
     }
 }

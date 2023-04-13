@@ -17,7 +17,7 @@ public abstract class BaseController<T extends BaseEntity> {
 
     private final Logger log;
 
-    protected ResponseEntity<T> create(T entity) {
+    protected ResponseEntity<T> create(T entity) {// TODO: 11.04.2023 assure id consistent
         log.info("Create [{}]", entity);
         if (!entity.isNew()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
