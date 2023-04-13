@@ -9,7 +9,6 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -24,7 +23,7 @@ class RestaurantControllerTest extends BaseMvcTest {
 
     @Test
     void create() throws Exception {
-        Restaurant restaurant = new Restaurant("New restaurant", "New Address");
+        Restaurant restaurant = new Restaurant(null, "New restaurant", "New Address");
         long count = repository.count();
 
         post(BASE_URL, restaurant)
@@ -69,15 +68,14 @@ class RestaurantControllerTest extends BaseMvcTest {
 
     @Test
     void update() throws Exception {
-        Restaurant restaurant = new Restaurant(REST_1);
-        int id = Objects.requireNonNull(restaurant.getId());
-        restaurant.setName("New name");
+        String newName = "New name";
+        Restaurant restaurant = new Restaurant(REST_1_ID, newName, REST_1.getAddress());
 
-        put(BASE_URL + "/" + id, restaurant)
+        put(BASE_URL + "/" + REST_1_ID, restaurant)
                 .andExpect(status().isNoContent());
         repository.flush();
-        assertThat(repository.findById(id).orElseThrow().getName())
-                .isEqualTo("New name");
+        assertThat(repository.findById(REST_1_ID).orElseThrow().getName())
+                .isEqualTo(newName);
     }
 
     @Test

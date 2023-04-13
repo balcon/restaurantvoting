@@ -8,11 +8,12 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "address"}),
+        indexes = @Index(name = "restaurants_name_idx", columnList = "name"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -24,25 +25,18 @@ public class Restaurant extends NamedEntity {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @OnDelete(action = OnDeleteAction.CASCADE) //todo dish side?
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    @JsonIgnore // todo write normal mapper
-    private List<Dish> dishes; //todo BatchSize?
+    @JsonIgnore
+    private List<Dish> dishes;
 
-    public Restaurant(Restaurant r) {
-        this(r.id, r.name, r.address, new ArrayList<>());
-    }
-
-    public Restaurant(String name, String address) {
-        this(null, name, address, new ArrayList<>());
+    public Restaurant(Integer id, String name, String address) {
+        super(id, name);
+        this.address = address;
     }
 
     public Restaurant(Integer id, String name, String address, List<Dish> dishes) {
-        super(id, name);
-        this.address = address;
+        this(id, name, address);
         this.dishes = dishes;
     }
-
-    //todo DB indexes?!
-    //todo unique
 }

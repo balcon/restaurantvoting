@@ -10,7 +10,6 @@ import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
-import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import java.time.LocalDate;
@@ -37,7 +36,6 @@ public class DishController extends BaseController<Dish> {
     public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
         dish.setRestaurant(proxy);
-        dish.setOfferDate(DateTimeUtil.currentDate()); // TODO: 06.04.2023 Default offer date?
         return super.create(dish);
     }
 

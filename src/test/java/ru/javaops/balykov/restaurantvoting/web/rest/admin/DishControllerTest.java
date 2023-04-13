@@ -28,8 +28,7 @@ class DishControllerTest extends BaseMvcTest {
 
     @Test
     void create() throws Exception {
-        Dish newDish = new Dish("New dish", 10000);
-        newDish.setOfferDate(null); // TODO: 06.04.2023 Default offer date
+        Dish newDish = new Dish(null, "New dish", 10000);
         long dishesCount = repository.count();
         post(RESTAURANT_URL, newDish)
                 .andExpect(status().isCreated())
@@ -89,15 +88,15 @@ class DishControllerTest extends BaseMvcTest {
 
     @Test
     void update() throws Exception {
-        Dish dish = new Dish(DISH_1);
-        dish.setName("New name");
-        int id = Objects.requireNonNull(dish.getId());
+        String newName = "New name";
+        int id = Objects.requireNonNull(DISH_1.getId());
+        Dish dish = new Dish(id, newName, DISH_1.getPrice(), DISH_1.getOfferDate());
 
         put(BASE_URL + "/" + id, dish)
                 .andExpect(status().isNoContent());
         repository.flush();
         assertThat(repository.findById(id).orElseThrow().getName())
-                .isEqualTo("New name");
+                .isEqualTo(newName);
     }
 
     @Test

@@ -10,7 +10,8 @@ import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dishes")
+@Table(name = "dishes",
+        indexes = @Index(name = "dishes_rest_date_idx", columnList = "restaurant_id, offerDate"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -22,7 +23,7 @@ public class Dish extends NamedEntity {
     private Integer price;
 
     @Column(nullable = false, columnDefinition = "date default CURRENT_DATE()")
-    private LocalDate offerDate;
+    private LocalDate offerDate = DateTimeUtil.currentDate();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -30,22 +31,13 @@ public class Dish extends NamedEntity {
     @JsonIgnore
     private Restaurant restaurant;
 
-    public Dish(Dish d) {
-        this(d.id, d.name, d.price, d.offerDate);
-        restaurant = d.restaurant;
-    }
-
-    public Dish(String name, int price) {
-        this(null, name, price);
-    }
-
     public Dish(Integer id, String name, int price) {
-        this(id, name, price, DateTimeUtil.currentDate());
+        super(id, name);
+        this.price = price;
     }
 
     public Dish(Integer id, String name, int price, LocalDate offerDate) {
-        super(id, name);
-        this.price = price;
+        this(id, name, price);
         this.offerDate = offerDate;
     }
 }

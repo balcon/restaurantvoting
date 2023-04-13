@@ -20,4 +20,6 @@ public class RestExceptionHandler {
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
         return new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
     }
+    // TODO: 13.04.2023 User email unique
+    // TODO: 13.04.2023 Restaurants name and address unique 
 }

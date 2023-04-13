@@ -12,7 +12,8 @@ import org.hibernate.annotations.BatchSize;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        indexes = @Index(name = "users_email_name_idx", columnList = "email, name"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -42,11 +43,7 @@ public class User extends NamedEntity {
     }
 
     public User(String name, String email, String password) {
-        this(null, name, email, password, null);
-    }
-
-    public User(String name, String email, String password, Set<Role> roles) {
-        this(null, name, email, password, roles);
+        this(null, name, email, password, Role.DEFAULT_ROLES);
     }
 
     public User(Integer id, String name, String email, String password, Set<Role> roles) {

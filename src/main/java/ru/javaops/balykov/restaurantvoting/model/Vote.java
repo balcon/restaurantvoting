@@ -10,7 +10,8 @@ import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "votes",
+        indexes = @Index(name = "votes_date_rest_idx", columnList = "voteDate, restaurant_id"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class Vote extends BaseEntity { // todo change ID to restaurant + voteDat
     private User user;
 
     @Column(nullable = false, columnDefinition = "date default CURRENT_DATE()")
-    private LocalDate voteDate;
+    private LocalDate voteDate = DateTimeUtil.currentDate();
 
     public Vote(Restaurant restaurant, User user) {
         this(null, restaurant, user);
@@ -38,6 +39,5 @@ public class Vote extends BaseEntity { // todo change ID to restaurant + voteDat
         super(id);
         this.restaurant = restaurant;
         this.user = user;
-        this.voteDate = DateTimeUtil.currentDate();
     }
 }
