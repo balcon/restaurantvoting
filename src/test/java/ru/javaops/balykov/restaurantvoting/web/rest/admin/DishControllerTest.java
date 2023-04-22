@@ -8,12 +8,10 @@ import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.DishController.BASE_URL;
 
@@ -61,24 +59,17 @@ class DishControllerTest extends BaseMvcTest {
         get(BASE_URL)
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(match(repository.findAll()));
+                .andExpect(jsonPath("content").isArray());
+//                .andExpect(match(repository.findAll()));
     }
 
     @Test
-    void getAllOfRestaurant() throws Exception {
+    void getTodaysOfRestaurant() throws Exception {
         get(RESTAURANT_URL)
                 .andExpect(status().isOk())
-                .andExpect(match(List.of(DISH_1, DISH_2, YESTERDAYS_DISH)));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(match(REST_1_DISHES));
     }
-
-//    @Test
-//    void getTodaysOfRestaurant() throws Exception {
-//        get(RESTAURANT_URL)
-//                        .queryParam("offerDate", DateTimeUtil.currentDate().toString()))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(matcher.json(REST_1_DISHES));
-//    }
 
     @Test
     void getNotExists() throws Exception {

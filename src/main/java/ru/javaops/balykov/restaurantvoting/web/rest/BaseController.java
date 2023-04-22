@@ -2,13 +2,13 @@ package ru.javaops.balykov.restaurantvoting.web.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.javaops.balykov.restaurantvoting.model.BaseEntity;
 
-import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -30,9 +30,9 @@ public abstract class BaseController<T extends BaseEntity> {
         return ResponseEntity.of(repository.findById(id));
     }
 
-    protected List<T> getAll(Sort sort) {
-        log.info("Get all");
-        return repository.findAll(sort);
+    protected Page<T> getAll(Pageable pageable) {
+        log.info("Get all with pagination [{}]", pageable);
+        return repository.findAll(pageable);
     }
 
     protected ResponseEntity<?> update(int id, T entity) {

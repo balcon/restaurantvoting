@@ -2,7 +2,10 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
+import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import java.time.LocalDate;
@@ -46,19 +50,18 @@ public class DishController extends BaseController<Dish> {
 
     @GetMapping(BASE_URL)
     @ResponseStatus(HttpStatus.OK)
-    public List<Dish> getAll() {
-        return super.getAll(Sort.unsorted());
+    public Page<Dish> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
+                             @SortDefault("name") Pageable pageable) {
+        return super.getAll(pageable);
     }
 
     @GetMapping(RESTAURANT_URL)
     public List<Dish> getAllOfRestaurant(@PathVariable int restaurantId,
-                                         @RequestParam(required = false) LocalDate offerDate) {
-        if (offerDate == null) {
-            return repository.findAllByRestaurantId(
-                    restaurantId, Sort.by(Sort.Direction.DESC, "offerDate", "name", "id"));
-        } else {
-            return repository.findAllByRestaurantIdAndOfferDate(restaurantId, offerDate, Sort.by("name", "id"));
-        }
+                                         @RequestParam(required = false) LocalDate offerDate,
+                                         @SortDefault("name") Sort sort) {
+        log.info("Get all of restaurant with id [{}], by date [{}] with sort [{}]", restaurantId, offerDate, sort);
+        offerDate = offerDate == null ? DateTimeUtil.currentDate() : offerDate;
+        return repository.findAllByRestaurantIdAndOfferDate(restaurantId, offerDate, sort);
     }
 
     @PutMapping(BASE_URL + "/{id}")

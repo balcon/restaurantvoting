@@ -2,6 +2,8 @@ package ru.javaops.balykov.restaurantvoting.web.rest.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +25,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(RestaurantUserController.BASE_URL)
 @RequiredArgsConstructor
 @Slf4j
-public class RestaurantUserController {
+public class RestaurantUserController { // TODO: 22.04.2023 check db requests 
     protected static final String BASE_URL = API_URL + "/user/restaurants";
 
     private final RestaurantRepository repository;
@@ -33,9 +35,11 @@ public class RestaurantUserController {
     private final RestaurantToMapper toMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantTo> getById(@PathVariable int id) {
-        log.info("Get by id [{}]", id);
-        Optional<Restaurant> restaurantOpt = repository.findByIdWithDishesByDate(id, DateTimeUtil.currentDate());
+    public ResponseEntity<RestaurantTo> getById(@PathVariable int id,
+                                                @SortDefault("dish.name") Sort sort) {
+        log.info("Get by id [{}] sorted by [{}]", id, sort);
+        Optional<Restaurant> restaurantOpt =
+                repository.findByIdWithDishesByDate(id, DateTimeUtil.currentDate(), sort);
         if (restaurantOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -45,9 +49,9 @@ public class RestaurantUserController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAll() {
-        log.info("Get all");
-        List<Restaurant> restaurants = repository.findAllWithDishesByDate(DateTimeUtil.currentDate());
+    public List<RestaurantTo> getAll(@SortDefault(sort = {"name", "dish.name"}) Sort sort) {
+        log.info("Get all sorted by [{}]", sort);
+        List<Restaurant> restaurants = repository.findAllWithDishesByDate(DateTimeUtil.currentDate(), sort);
 
         return toMapper.getTos(restaurants);
     }

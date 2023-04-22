@@ -2,15 +2,15 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-
-import java.util.List;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
@@ -36,8 +36,8 @@ public class RestaurantController extends BaseController<Restaurant> {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Restaurant> getAll() {
-        return super.getAll(Sort.by("name", "id"));
+    public Page<Restaurant> getAll(@SortDefault(sort = {"name", "address"}) Pageable pageable) {
+        return super.getAll(pageable);
     }
 
     @PutMapping("/{id}")
