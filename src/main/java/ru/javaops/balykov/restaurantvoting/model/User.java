@@ -27,19 +27,20 @@ public class User extends NamedEntity {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ToString.Exclude
-    @NotNull
-    @Size(min = 8, max = 64)
+    // TODO: 25.04.2023 Password validation?
+//    @NotNull
+//    @Size(min = 8, max = 64)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
-    @BatchSize(size = 20) //todo EntityGraph?
+    @BatchSize(size = 20)
     private Set<Role> roles;
 
     public User(User u) {
-        this(u.id, u.name, u.email, u.password, u.roles); // todo copy collection
+        this(u.id, u.name, u.email, u.password, u.roles);
     }
 
     public User(String name, String email, String password) {

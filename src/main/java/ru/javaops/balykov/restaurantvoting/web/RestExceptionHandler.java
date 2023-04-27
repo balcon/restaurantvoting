@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+    // TODO: 26.04.2023 make normal responce 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> validationErrors(MethodArgumentNotValidException e) {
         Map<String, List<String>> fieldErrors = e.getFieldErrors().stream()
@@ -20,6 +21,4 @@ public class RestExceptionHandler {
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
         return new ResponseEntity<>(fieldErrors, HttpStatus.BAD_REQUEST);
     }
-    // TODO: 13.04.2023 User email unique
-    // TODO: 13.04.2023 Restaurants name and address unique 
 }

@@ -13,7 +13,7 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.service.VoteService;
 import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
-import ru.javaops.balykov.restaurantvoting.util.RestaurantToMapper;
+import ru.javaops.balykov.restaurantvoting.to.RestaurantToMapper;
 import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 
 import java.util.List;
@@ -25,13 +25,11 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(RestaurantUserController.BASE_URL)
 @RequiredArgsConstructor
 @Slf4j
-public class RestaurantUserController { // TODO: 22.04.2023 check db requests 
+public class RestaurantUserController {
     protected static final String BASE_URL = API_URL + "/user/restaurants";
 
     private final RestaurantRepository repository;
-
     private final VoteService voteService;
-
     private final RestaurantToMapper toMapper;
 
     @GetMapping("/{id}")
@@ -43,7 +41,7 @@ public class RestaurantUserController { // TODO: 22.04.2023 check db requests
         if (restaurantOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            RestaurantTo restaurantTo = toMapper.getTo(restaurantOpt.get());
+            RestaurantTo restaurantTo = toMapper.of(restaurantOpt.get());
             return new ResponseEntity<>(restaurantTo, HttpStatus.OK);
         }
     }
@@ -52,8 +50,7 @@ public class RestaurantUserController { // TODO: 22.04.2023 check db requests
     public List<RestaurantTo> getAll(@SortDefault(sort = {"name", "dish.name"}) Sort sort) {
         log.info("Get all sorted by [{}]", sort);
         List<Restaurant> restaurants = repository.findAllWithDishesByDate(DateTimeUtil.currentDate(), sort);
-
-        return toMapper.getTos(restaurants);
+        return toMapper.of(restaurants);
     }
 
     @PutMapping("/{id}/voted")

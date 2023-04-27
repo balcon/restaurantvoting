@@ -13,8 +13,8 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public abstract class BaseController<T extends BaseEntity> {
-    private final JpaRepository<T, Integer> repository;
 
+    private final JpaRepository<T, Integer> repository;
     private final Logger log;
 
     protected ResponseEntity<T> create(T entity) {// TODO: 11.04.2023 assure id consistent
@@ -40,7 +40,7 @@ public abstract class BaseController<T extends BaseEntity> {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (!Objects.equals(entity.getId(), id)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // TODO: 25.04.2023 throw exception
         }
         if (!repository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

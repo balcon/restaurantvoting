@@ -1,11 +1,11 @@
-package ru.javaops.balykov.restaurantvoting.util;
+package ru.javaops.balykov.restaurantvoting.to;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.Vote;
 import ru.javaops.balykov.restaurantvoting.repository.VoteRepository;
-import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
+import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class RestaurantToMapper {
     private final VoteRepository repository;
 
-    public RestaurantTo getTo(Restaurant restaurant) {
+    public RestaurantTo of(Restaurant restaurant) {
         List<Vote> votes = repository.findByRestaurantAndVoteDate(restaurant, DateTimeUtil.currentDate());
         return getTo(restaurant, votes);
     }
 
-    public List<RestaurantTo> getTos(List<Restaurant> restaurants) {
+    public List<RestaurantTo> of(List<Restaurant> restaurants) {
         Map<Restaurant, List<Vote>> votes =
                 repository.findByVoteDate(DateTimeUtil.currentDate()).stream()
                         .collect(Collectors.groupingBy(Vote::getRestaurant));

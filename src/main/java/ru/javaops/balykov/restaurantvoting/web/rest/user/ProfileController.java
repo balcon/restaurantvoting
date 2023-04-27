@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
+import ru.javaops.balykov.restaurantvoting.util.UserUtil;
 import ru.javaops.balykov.restaurantvoting.web.AuthUser;
+import ru.javaops.balykov.restaurantvoting.web.EmailUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
@@ -20,14 +23,27 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 public class ProfileController extends BaseController<User> {
     protected static final String BASE_URL = API_URL + "/user/profile";
 
-    public ProfileController(UserRepository repository) {
+    private final UserRepository repository;
+    private final PasswordEncoder encoder;
+    private final EmailUniqueValidator emailUniqueValidator;
+
+    public ProfileController(UserRepository repository,
+                             PasswordEncoder encoder,
+                             EmailUniqueValidator emailUniqueValidator) {
         super(repository, log);
+        this.repository = repository;
+        this.encoder = encoder;
+        this.emailUniqueValidator = emailUniqueValidator;
+    }
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.addValidators(emailUniqueValidator);
     }
 
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody User user) {
-        user.setRoles(Role.DEFAULT_ROLES);
-        return super.create(user);
+        return super.create(UserUtil.prepareToSave(user, encoder));
     }
 
     @GetMapping
@@ -37,8 +53,10 @@ public class ProfileController extends BaseController<User> {
 
     @PutMapping
     public ResponseEntity<?> update(@Valid @RequestBody User user,
-                                    @AuthenticationPrincipal AuthUser authUser) { // TODO: 09.04.2023 Password change?
-        // TODO: 13.04.2023 Roles?
+                                    @AuthenticationPrincipal AuthUser authUser) {
+        user = UserUtil.prepareToUpdate(user, authUser.getUser(), encoder);
+        // The user does not have to change their roles
+        user.setRoles(repository.findById(authUser.id()).orElseThrow().getRoles()); // TODO: 25.04.2023 exception?
         return super.update(authUser.id(), user);
     }
 
