@@ -1,11 +1,11 @@
-package ru.javaops.balykov.restaurantvoting.to;
+package ru.javaops.balykov.restaurantvoting.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.Vote;
 import ru.javaops.balykov.restaurantvoting.repository.VoteRepository;
-import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
+import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
 
 import java.util.Collections;
 import java.util.List;

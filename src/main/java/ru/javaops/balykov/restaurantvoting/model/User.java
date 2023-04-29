@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -27,9 +26,8 @@ public class User extends NamedEntity {
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ToString.Exclude
-    // TODO: 25.04.2023 Password validation?
-//    @NotNull
-//    @Size(min = 8, max = 64)
+    @NotBlank
+    @Size(min = 8)
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -13,7 +13,7 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.service.VoteService;
 import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
-import ru.javaops.balykov.restaurantvoting.to.RestaurantToMapper;
+import ru.javaops.balykov.restaurantvoting.util.RestaurantToMapper;
 import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 
 import java.util.List;

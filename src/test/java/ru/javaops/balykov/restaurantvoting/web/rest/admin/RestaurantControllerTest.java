@@ -67,7 +67,8 @@ class RestaurantControllerTest extends BaseMvcTest {
     @Test
     void update() throws Exception {
         String newName = "New name";
-        Restaurant restaurant = new Restaurant(REST_1_ID, newName, REST_1.getAddress());
+        Restaurant restaurant = new Restaurant(REST_1);
+        restaurant.setName(newName);
 
         put(BASE_URL + "/" + REST_1_ID, restaurant)
                 .andExpect(status().isNoContent());
@@ -94,5 +95,29 @@ class RestaurantControllerTest extends BaseMvcTest {
     void nonAdminAccess() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_EMAIL)
+    void nonUniqueCreate() throws Exception {
+        Restaurant restaurant = new Restaurant(REST_1);
+        restaurant.setId(null);
+
+        post(BASE_URL, restaurant)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.address").exists());
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_EMAIL)
+    void nonUniqueUpdate() throws Exception {
+        Restaurant restaurant = new Restaurant(REST_1);
+        restaurant.setId(null);
+
+        put(BASE_URL + "/" + REST_1_ID, restaurant)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.address").exists());
     }
 }

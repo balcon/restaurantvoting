@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting.web;
+package ru.javaops.balykov.restaurantvoting.validation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class EmailUniqueValidator implements Validator {
-    private final UserRepository repository;
 
+    private final UserRepository repository;
     private final HttpServletRequest request;
 
     @Override

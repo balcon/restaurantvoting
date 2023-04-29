@@ -33,7 +33,7 @@ class ProfileControllerTest extends BaseMvcTest {
 
     @Test
     @WithAnonymousUser
-    void registrationNewUser() throws Exception {
+    void registration() throws Exception {
         String email = "new_mail@mail.ru";
         User user = new User("New name", email, "password");
         post(BASE_URL, asJsonWithPassword(user))
@@ -45,11 +45,22 @@ class ProfileControllerTest extends BaseMvcTest {
 
     @Test
     @WithUserDetails(USER_EMAIL)
+    void update() throws Exception {
+        User user = new User(USER);
+        user.setName("New name");
+        user.setPassword(null);
+
+        put(BASE_URL, user).andExpect(status().isNoContent());
+        repository.flush();
+        assertThat(repository.findById(USER_ID).orElseThrow().getName()).isEqualTo("New name");
+    }
+
+    @Test
+    @WithUserDetails(USER_EMAIL)
     void checkRolesUpdateRestriction() throws Exception {
         User user = new User(USER);
         user.setRoles(Set.of(Role.USER, Role.ADMIN));
-        put(BASE_URL, asJsonWithPassword(user))
-                .andExpect(status().isNoContent());
+        put(BASE_URL, asJsonWithPassword(user)).andExpect(status().isNoContent());
 
         assertThat(repository.findById(USER_ID).orElseThrow().getRoles()).isEqualTo(Set.of(Role.USER));
     }
@@ -70,6 +81,7 @@ class ProfileControllerTest extends BaseMvcTest {
                 .andExpect(jsonPath("$.email").exists());
     }
 
+    // Writing password to json manually because password is write-only in jackson config
     private String asJsonWithPassword(User user) {
         ObjectNode json = mapper.valueToTree(user);
         json.put("password", user.getPassword());

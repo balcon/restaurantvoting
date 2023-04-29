@@ -11,7 +11,6 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
-import java.util.Objects;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,13 +71,13 @@ class UserControllerTest extends BaseMvcTest {
     @Test
     void update() throws Exception {
         User user = new User(USER);
-        int id = Objects.requireNonNull(user.getId());
         user.setName("New name");
+        user.setPassword(null);
 
-        put(BASE_URL + "/" + id, asJsonWithPassword(user))
+        put(BASE_URL + "/" + USER_ID, asJsonWithPassword(user))
                 .andExpect(status().isNoContent());
         repository.flush();
-        assertThat(repository.findById(id).orElseThrow().getName())
+        assertThat(repository.findById(USER_ID).orElseThrow().getName())
                 .isEqualTo("New name");
     }
 
@@ -96,8 +95,21 @@ class UserControllerTest extends BaseMvcTest {
     }
 
     @Test
-    void validationErrors() throws Exception {
+    void createWithValidationErrors() throws Exception {
         post(BASE_URL, asJsonWithPassword(new User("", "not_mail", "short")))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.name").exists())
+                .andExpect(jsonPath("$.email").exists())
+                .andExpect(jsonPath("$.password").exists());
+    }
+
+    @Test
+    void updateWithValidationErrors() throws Exception {
+        User user = new User(USER);
+        user.setName("");
+        user.setEmail("not_mail");
+        user.setPassword("short");
+        put(BASE_URL + "/" + USER_ID, asJsonWithPassword(user))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.name").exists())
                 .andExpect(jsonPath("$.email").exists())

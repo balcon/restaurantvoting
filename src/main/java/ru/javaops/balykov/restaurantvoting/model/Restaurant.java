@@ -30,6 +30,10 @@ public class Restaurant extends NamedEntity {
     @JsonIgnore
     private List<Dish> dishes;
 
+    public Restaurant(Restaurant r) {
+        this(r.getId(), r.getName(), r.getAddress(), r.getDishes());
+    }
+
     public Restaurant(Integer id, String name, String address) {
         super(id, name);
         this.address = address;

@@ -12,6 +12,9 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
+
+    Optional<Restaurant> findByNameIgnoreCaseAndAddressIgnoreCase(String name, String address);
+
     @Query("FROM Restaurant r LEFT JOIN FETCH r.dishes dish WHERE dish.offerDate = :date")
     List<Restaurant> findAllWithDishesByDate(LocalDate date, Sort sort);
 

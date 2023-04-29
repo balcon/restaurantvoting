@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
+import ru.javaops.balykov.restaurantvoting.validation.RestaurantUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
@@ -20,8 +22,16 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 public class RestaurantController extends BaseController<Restaurant> {
     protected static final String BASE_URL = API_URL + "/admin/restaurants";
 
-    public RestaurantController(RestaurantRepository repository) {
+    private final RestaurantUniqueValidator validator;
+
+    public RestaurantController(RestaurantRepository repository, RestaurantUniqueValidator validator) {
         super(repository, log);
+        this.validator = validator;
+    }
+
+    @InitBinder
+    private void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
     }
 
     @PostMapping
