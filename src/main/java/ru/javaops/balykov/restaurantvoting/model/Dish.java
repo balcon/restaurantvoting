@@ -31,6 +31,11 @@ public class Dish extends NamedEntity {
     @JsonIgnore
     private Restaurant restaurant;
 
+    public Dish(Dish dish) {
+        this(dish.id, dish.name, dish.price, dish.offerDate);
+        this.restaurant = dish.restaurant;
+    }
+
     public Dish(Integer id, String name, int price) {
         super(id, name);
         this.price = price;

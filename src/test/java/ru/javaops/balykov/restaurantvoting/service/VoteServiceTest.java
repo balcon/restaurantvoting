@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.balykov.restaurantvoting.exception.IllegalRequestException;
 import ru.javaops.balykov.restaurantvoting.model.Vote;
 import ru.javaops.balykov.restaurantvoting.repository.VoteRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
@@ -60,7 +61,7 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            assertThrows(UnsupportedOperationException.class, () -> service.vote(REST_2, ADMIN));
+            assertThrows(IllegalRequestException.class, () -> service.vote(REST_2, ADMIN));
         }
     }
 }

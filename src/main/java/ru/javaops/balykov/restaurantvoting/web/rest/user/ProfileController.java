@@ -3,7 +3,6 @@ package ru.javaops.balykov.restaurantvoting.web.rest.user;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
@@ -12,6 +11,7 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
@@ -40,23 +40,27 @@ public class ProfileController extends BaseController<User> {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@Valid @RequestBody User user) {
         return super.create(preparator.prepareToSave(user));
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public User getAuth(@AuthenticationPrincipal AuthUser authUser) {
         return authUser.getUser();
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody User user,
-                                    @AuthenticationPrincipal AuthUser authUser) throws BindException {
-        user = preparator.prepareToUpdate(user, authUser.getUser());
-        // The user does not have to change their roles
-        user.setRoles(repository.findById(authUser.id())
-                .orElseThrow(RuntimeException::new).getRoles()); // TODO: 25.04.2023 exception?
-        return super.update(authUser.id(), user);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody User user,
+                       @AuthenticationPrincipal AuthUser authUser) throws BindException {
+        log.info("Update profile [{}] to [{}]", authUser, user);
+        ValidationUtil.assureIdConsistent(user, authUser.id());
+
+        // User does not have to change their roles
+        user.setRoles(authUser.getUser().getRoles());
+        repository.save(preparator.prepareToUpdate(user, authUser.getUser()));
     }
 
     @DeleteMapping

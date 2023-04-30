@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.ResultActions;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
-
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,24 +25,16 @@ class DishControllerTest extends BaseMvcTest {
 
     @Test
     void create() throws Exception {
-        Dish newDish = new Dish(null, "New dish", 10000);
         long dishesCount = repository.count();
-        post(RESTAURANT_URL, newDish)
+        Dish dish = new Dish(NEW_DISH);
+        dish.setId(null);
+        post(RESTAURANT_URL, dish)
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 //                .andExpect(match(newDish));
+        // TODO: 30.04.2023 need matcher
         repository.flush();
         assertThat(repository.count()).isEqualTo(dishesCount + 1);
-    }
-
-    @Test
-    void createNotNew() throws Exception {
-        long count = repository.count();
-
-        post(RESTAURANT_URL, DISH_1)
-                .andExpect(status().isBadRequest());
-        repository.flush();
-        assertThat(repository.count()).isEqualTo(count);
     }
 
     @Test
@@ -61,6 +52,7 @@ class DishControllerTest extends BaseMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("content").isArray());
 //                .andExpect(match(repository.findAll()));
+        // TODO: 30.04.2023 need matcher
     }
 
     @Test
@@ -72,34 +64,63 @@ class DishControllerTest extends BaseMvcTest {
     }
 
     @Test
-    void getNotExists() throws Exception {
-        get(RESTAURANT_URL + "/0")
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void update() throws Exception {
         String newName = "New name";
-        int id = Objects.requireNonNull(DISH_1.getId());
-        Dish dish = new Dish(id, newName, DISH_1.getPrice(), DISH_1.getOfferDate());
-
-        put(BASE_URL + "/" + id, dish)
-                .andExpect(status().isNoContent());
+        Dish dish = new Dish(DISH_1);
+        dish.setName(newName);
+        put(BASE_URL + "/" + DISH_1_ID, dish).andExpect(status().isNoContent());
         repository.flush();
-        assertThat(repository.findById(id).orElseThrow().getName())
-                .isEqualTo(newName);
-    }
-
-    @Test
-    void updateWithDifferentId() throws Exception {
-        put(BASE_URL + "/" + DISH_1_ID, DISH_2)
-                .andExpect(status().isBadRequest());
+        assertThat(repository.findById(DISH_1_ID).orElseThrow().getName()).isEqualTo(newName);
     }
 
     @Test
     void deleteById() throws Exception {
-        delete(BASE_URL + "/" + DISH_1_ID)
-                .andExpect(status().isNoContent());
+        delete(BASE_URL + "/" + DISH_1_ID).andExpect(status().isNoContent());
         assertThat(repository.existsById(DISH_1_ID)).isFalse();
+    }
+
+    // TODO: 29.04.2023 refactor it!
+    @Test
+    void validationErrors() throws Exception {
+        expectValidationErrors(post(RESTAURANT_URL, new Dish(null, "", 3000000)));
+    }
+
+    @Test
+    @WithUserDetails(USER_EMAIL)
+    void nonAdminAccess() throws Exception {
+        get(RestaurantController.BASE_URL)
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void createNotNew() throws Exception {
+        expectIllegalRequest(post(RESTAURANT_URL, NEW_DISH));
+    }
+
+    @Test
+    void updateDifferentId() throws Exception {
+        expectIllegalRequest(put(BASE_URL + "/" + DISH_1_ID, NEW_DISH));
+
+    }
+
+    @Test
+    void getNotExists() throws Exception {
+        expectNotFound(get(BASE_URL + "/0"));
+    }
+
+    @Test
+    void updateNonExists() throws Exception {
+        expectNotFound(put(BASE_URL + "/100", NEW_DISH));
+    }
+
+    @Test
+    void deleteNotExists() throws Exception {
+        expectNotFound(delete(BASE_URL + "/0"));
+    }
+
+    private void expectValidationErrors(ResultActions resultActions) throws Exception {
+        resultActions.andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.details.name").exists())
+                .andExpect(jsonPath("$.details.price").exists());
     }
 }

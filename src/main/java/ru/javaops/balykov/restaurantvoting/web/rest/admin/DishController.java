@@ -7,13 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
+import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import java.time.LocalDate;
@@ -37,15 +39,17 @@ public class DishController extends BaseController<Dish> {
     }
 
     @PostMapping(RESTAURANT_URL)
-    public ResponseEntity<Dish> create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Dish create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
         dish.setRestaurant(proxy);
         return super.create(dish);
     }
 
     @GetMapping(BASE_URL + "/{id}")
-    public ResponseEntity<Dish> getById(@PathVariable int id) {
-        return ResponseEntity.of(repository.findById(id));
+    @ResponseStatus(HttpStatus.OK)
+    public Dish getById(@PathVariable int id) {
+        return super.getById(id);
     }
 
     @GetMapping(BASE_URL)
@@ -56,20 +60,24 @@ public class DishController extends BaseController<Dish> {
     }
 
     @GetMapping(RESTAURANT_URL)
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public List<Dish> getAllOfRestaurant(@PathVariable int restaurantId,
                                          @RequestParam(required = false) LocalDate offerDate,
                                          @SortDefault("name") Sort sort) {
         log.info("Get all of restaurant with id [{}], by date [{}] with sort [{}]", restaurantId, offerDate, sort);
+        ValidationUtil.checkIfExists(restaurantRepository, restaurantId);
         offerDate = offerDate == null ? DateTimeUtil.currentDate() : offerDate;
         return repository.findAllByRestaurantIdAndOfferDate(restaurantId, offerDate, sort);
     }
 
     @PutMapping(BASE_URL + "/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody Dish dish) {
-        // TODO: 09.04.2023 Could be done better?
-        Restaurant restaurant = repository.findById(id).orElseThrow().getRestaurant();
-        dish.setRestaurant(restaurant);
-        return super.update(id, dish);
+    @Transactional
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable int id, @Valid @RequestBody Dish dish) {
+        dish.setRestaurant(repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(id)).getRestaurant());
+        super.update(id, dish);
     }
 
     @DeleteMapping(BASE_URL + "/{id}")

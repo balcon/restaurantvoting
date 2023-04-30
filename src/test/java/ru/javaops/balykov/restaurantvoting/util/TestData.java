@@ -30,11 +30,6 @@ public class TestData {
             new Restaurant(REST_1_ID, "Tang-Zhen", "Nevsky Prospect 74", REST_1_DISHES);
     public final Restaurant REST_2 =
             new Restaurant(REST_2_ID, "KFC", "Sredniy Prospect, Vasilievsky island 38/40", REST_2_DISHES);
-    public final Restaurant REST_3 =
-            new Restaurant(3, "Without today's dish", "Any address", null);
-
-    public final Dish YESTERDAYS_DISH =
-            new Dish(50, "Yesterday's dish", 100, DateTimeUtil.currentDate().minusDays(1));
 
     // Users
     public final int USER_ID = 20;
@@ -54,4 +49,9 @@ public class TestData {
     public final RestaurantTo REST_2_TO =
             new RestaurantTo(REST_2_ID, REST_2.getName(), REST_2.getAddress(),
                     REST_2_DISHES, Collections.emptyList());
+
+    // New entities
+    public final Dish NEW_DISH = new Dish(100, "New dish", 100);
+    public final Restaurant NEW_RESTAURANT = new Restaurant(100, "New Rest", "New Address");
+    public final User NEW_USER = new User(100, "New admin", "new_mail@mail.ru", "newpassword", Role.DEFAULT_ROLES);
 }

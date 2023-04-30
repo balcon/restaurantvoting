@@ -33,6 +33,6 @@ public class RestaurantToMapper {
 
     private RestaurantTo getTo(Restaurant restaurant, List<Vote> votes) {
         return new RestaurantTo(restaurant.getId(), restaurant.getName(),
-                restaurant.getAddress(), restaurant.getDishes(), votes); // TODO: 06.04.2023 Copy collections
+                restaurant.getAddress(), restaurant.getDishes(), votes);
     }
 }

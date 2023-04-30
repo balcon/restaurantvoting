@@ -3,6 +3,7 @@ package ru.javaops.balykov.restaurantvoting.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javaops.balykov.restaurantvoting.exception.IllegalRequestException;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.model.Vote;
@@ -26,7 +27,7 @@ public class VoteService {
                 vote.setRestaurant(restaurant);
                 repository.save(vote);
             } else {
-                throw new UnsupportedOperationException(); // TODO: 13.04.2023 Handle this exception 
+                throw new IllegalRequestException("Time for revote is over");
             }
         } else {
             repository.save(new Vote(restaurant, user));

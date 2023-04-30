@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,7 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
@@ -22,13 +22,15 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
 public class UserController extends BaseController<User> {
-    protected static final String BASE_URL = API_URL + "/admin/users";
+    public static final String BASE_URL = API_URL + "/admin/users";
 
+    private final UserRepository repository;
     private final EmailUniqueValidator validator;
     private final UserPreparator preparator;
 
     public UserController(UserRepository repository, EmailUniqueValidator validator, UserPreparator preparator) {
         super(repository, log);
+        this.repository = repository;
         this.preparator = preparator;
         this.validator = validator;
     }
@@ -39,12 +41,14 @@ public class UserController extends BaseController<User> {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@Valid @RequestBody User user) {
         return super.create(preparator.prepareToSave(user));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable int id) {
+    @ResponseStatus(HttpStatus.OK)
+    public User getById(@PathVariable int id) {
         return super.getById(id);
     }
 
@@ -55,10 +59,13 @@ public class UserController extends BaseController<User> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody User user, @PathVariable int id) throws BindException {
-        // TODO: 29.04.2023 check id 
-        User preparedUser = preparator.prepareToUpdate(user, id);
-        return super.update(id, preparedUser);
+//    @Transactional
+    // TODO: 30.04.2023 transactional breaks custom validatord 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@RequestBody User user, @PathVariable int id) throws BindException {
+        log.info("Update [{}] with id [{}]", user, id);
+        ValidationUtil.assureIdConsistent(user, id);
+        repository.save(preparator.prepareToUpdate(user, id));
     }
 
     @DeleteMapping("/{id}")

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
@@ -35,12 +34,14 @@ public class RestaurantController extends BaseController<Restaurant> {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurant create(@Valid @RequestBody Restaurant restaurant) {
         return super.create(restaurant);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getById(@PathVariable int id) {
+    @ResponseStatus(HttpStatus.OK)
+    public Restaurant getById(@PathVariable int id) {
         return super.getById(id);
     }
 
@@ -51,8 +52,9 @@ public class RestaurantController extends BaseController<Restaurant> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
-        return super.update(id, restaurant);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
+        super.update(id, restaurant);
     }
 
     @DeleteMapping("/{id}")

@@ -31,7 +31,7 @@ public class Restaurant extends NamedEntity {
     private List<Dish> dishes;
 
     public Restaurant(Restaurant r) {
-        this(r.getId(), r.getName(), r.getAddress(), r.getDishes());
+        this(r.id, r.name, r.address, r.dishes);
     }
 
     public Restaurant(Integer id, String name, String address) {

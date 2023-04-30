@@ -7,6 +7,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.SmartValidator;
+import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
@@ -29,7 +30,7 @@ public class UserPreparator {
     }
 
     public User prepareToUpdate(User newUser, int id) throws BindException {
-        User oldUser = repository.findById(id).orElseThrow(RuntimeException::new); // TODO: 25.04.2023 throw legal excepltion
+        User oldUser = repository.findById(id).orElseThrow(() -> new NotFoundException(id));
         return prepareToUpdate(newUser, oldUser);
     }
 
