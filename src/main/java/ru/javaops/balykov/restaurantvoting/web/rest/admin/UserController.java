@@ -10,30 +10,30 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.dto.UserDto;
-import ru.javaops.balykov.restaurantvoting.dto.assembler.UserDtoAssembler;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.UserAssembler;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinksMethods;
+import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
-public class UserController extends BaseController<User> implements HalLinksMethods {
+public class UserController extends BaseController<User> implements HalLinkMethods {
     public static final String BASE_URL = API_URL + "/admin/users";
 
     private final UserRepository repository;
     private final EmailUniqueValidator validator;
     private final UserPreparator preparator;
-    private final UserDtoAssembler assembler;
+    private final UserAssembler assembler;
 
     public UserController(UserRepository repository, EmailUniqueValidator validator,
-                          UserPreparator preparator, UserDtoAssembler assembler) {
+                          UserPreparator preparator, UserAssembler assembler) {
         super(repository, log);
         this.repository = repository;
         this.preparator = preparator;
@@ -48,33 +48,29 @@ public class UserController extends BaseController<User> implements HalLinksMeth
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@Valid @RequestBody User user) {
-        return super.create(preparator.prepareToSave(user));
+    public UserDto create(@Valid @RequestBody User user) {
+        return assembler.toModelWithCollection(super.doCreate(preparator.prepareToSave(user)));
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Override
     public UserDto getById(@PathVariable int id) {
-        return assembler.toModel(super.baseGetById(id));
+        return assembler.toModelWithCollection(super.doGetById(id));
     }
 
-    //    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public Page<User> baseGetAll(@SortDefault(sort = {"name", "email"}) Pageable pageable) {
-//        return super.baseGetAll(pageable);
-//    }//
-//
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Override
     public CollectionModel<UserDto> getAll(@SortDefault(sort = {"name", "email"}) Pageable pageable) {
-        return assembler.toCollectionModel(super.baseGetAll(pageable));
+        return assembler.toCollectionModel(super.doGetAll(pageable));
     }
 
     @PutMapping("/{id}")
 //    @Transactional
     // TODO: 30.04.2023 transactional breaks custom validatord 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody User user, @PathVariable int id) throws BindException {
+    public void update(@PathVariable int id, @RequestBody User user) throws BindException {
         log.info("Update [{}] with id [{}]", user, id);
         ValidationUtil.assureIdConsistent(user, id);
         repository.save(preparator.prepareToUpdate(user, id));
@@ -83,6 +79,6 @@ public class UserController extends BaseController<User> implements HalLinksMeth
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        super.delete(id);
+        super.doDelete(id);
     }
 }

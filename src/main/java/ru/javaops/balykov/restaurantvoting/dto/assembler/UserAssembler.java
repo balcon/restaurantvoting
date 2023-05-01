@@ -6,9 +6,9 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController;
 
 @Component
-public class UserDtoAssembler extends BaseDtoAssembler<User, UserDto> {
+public class UserAssembler extends BaseAssembler<User, UserDto> {
 
-    public UserDtoAssembler() {
+    protected UserAssembler() {
         super(UserController.class);
     }
 

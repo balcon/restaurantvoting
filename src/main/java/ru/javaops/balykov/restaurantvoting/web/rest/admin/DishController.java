@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.dto.DishDto;
-import ru.javaops.balykov.restaurantvoting.dto.assembler.DishDtoAssembler;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.DishAssembler;
 import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
@@ -19,7 +19,7 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinksMethods;
+import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,15 +28,15 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
 @Slf4j
-public class DishController extends BaseController<Dish> implements HalLinksMethods {
+public class DishController extends BaseController<Dish> implements HalLinkMethods {
     protected static final String BASE_URL = API_URL + "/admin/dishes";
     protected static final String RESTAURANT_URL = API_URL + "/admin/restaurants/{restaurantId}/dishes";
 
     private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;
-    private final DishDtoAssembler assembler;
+    private final DishAssembler assembler;
 
-    public DishController(DishRepository repository, RestaurantRepository restaurantRepository, DishDtoAssembler assembler) {
+    public DishController(DishRepository repository, RestaurantRepository restaurantRepository, DishAssembler assembler) {
         super(repository, log);
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
@@ -45,30 +45,25 @@ public class DishController extends BaseController<Dish> implements HalLinksMeth
 
     @PostMapping(RESTAURANT_URL)
     @ResponseStatus(HttpStatus.CREATED)
-    public Dish create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
+    public DishDto create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
         dish.setRestaurant(proxy);
-        return super.create(dish);
+        return assembler.toModelWithCollection(super.doCreate(dish));
     }
 
     @GetMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Override
     public DishDto getById(@PathVariable int id) {
-        return assembler.toModel(super.baseGetById(id));
+        return assembler.toModelWithCollection(super.doGetById(id));
     }
-
-//    @GetMapping(BASE_URL)
-//    @ResponseStatus(HttpStatus.OK)
-//    public Page<Dish> baseGetAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
-//                                 @SortDefault("name") Pageable pageable) {
-//        return super.baseGetAll(pageable);
-//    }
 
     @GetMapping(BASE_URL)
     @ResponseStatus(HttpStatus.OK)
+    @Override
     public CollectionModel<DishDto> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
                                            @SortDefault("name") Pageable pageable) {
-        return assembler.toCollectionModel(super.baseGetAll(pageable));
+        return assembler.toCollectionModel(super.doGetAll(pageable));
     }
 
     @GetMapping(RESTAURANT_URL)
@@ -89,12 +84,12 @@ public class DishController extends BaseController<Dish> implements HalLinksMeth
     public void update(@PathVariable int id, @Valid @RequestBody Dish dish) {
         dish.setRestaurant(repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(id)).getRestaurant());
-        super.update(id, dish);
+        super.doUpdate(id, dish);
     }
 
     @DeleteMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
-        super.delete(id);
+        super.doDelete(id);
     }
 }

@@ -6,9 +6,9 @@ import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.web.rest.admin.DishController;
 
 @Component
-public class DishDtoAssembler extends BaseDtoAssembler<Dish, DishDto> {
+public class DishAssembler extends BaseAssembler<Dish, DishDto> {
 
-    protected DishDtoAssembler() {
+    protected DishAssembler() {
         super(DishController.class);
     }
 

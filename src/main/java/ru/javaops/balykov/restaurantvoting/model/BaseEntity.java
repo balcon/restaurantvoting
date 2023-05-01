@@ -14,10 +14,16 @@ import java.util.Objects;
 @ToString
 public abstract class BaseEntity implements Persistable<Integer> {
     public static final int START_SEQ = 1000;
-    @Id // todo editable - false
+    @Id
     @SequenceGenerator(name = "main_seq", sequenceName = "main_seq", allocationSize = 1, initialValue = START_SEQ)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_seq")
+    @Column(updatable = false)
     protected Integer id;
+
+    @Transient
+    public Integer id() {
+        return Objects.requireNonNull(id);
+    }
 
     @Transient
     @Override

@@ -17,13 +17,13 @@ public abstract class BaseController<T extends BaseEntity> {
     private final JpaRepository<T, Integer> repository;
     private final Logger log;
 
-    protected T create(T entity) {
+    protected T doCreate(T entity) {
         log.info("Create [{}]", entity);
         ValidationUtil.checkNew(entity);
         return repository.save(entity);
     }
 
-    protected T baseGetById(int id) {
+    protected T doGetById(int id) {
         log.info("Get by id [{}]", id);
         Optional<T> optionalEntity = repository.findById(id);
         if (optionalEntity.isEmpty()) {
@@ -32,14 +32,14 @@ public abstract class BaseController<T extends BaseEntity> {
         return optionalEntity.get();
     }
 
-    protected Page<T> baseGetAll(Pageable pageable) {
+    protected Page<T> doGetAll(Pageable pageable) {
         log.info("Get all with pagination [{}]", pageable);
         return repository.findAll(pageable);
     }
 
     //    @Transactional
 // TODO: 30.04.2023 transactional breaks custom validators
-    protected void update(int id, T entity) {
+    protected void doUpdate(int id, T entity) {
         log.info("Update [{}] with id [{}]", entity, id);
         ValidationUtil.assureIdConsistent(entity, id);
         ValidationUtil.checkIfExists(repository, id); // TODO: 30.04.2023 duplicate checking for dish
@@ -48,7 +48,7 @@ public abstract class BaseController<T extends BaseEntity> {
 
     //    @Transactional
 // TODO: 30.04.2023 transactional breaks custom validators
-    protected void delete(int id) {
+    protected void doDelete(int id) {
         log.info("Delete with id [{}]", id);
         ValidationUtil.checkIfExists(repository, id);
         repository.deleteById(id);

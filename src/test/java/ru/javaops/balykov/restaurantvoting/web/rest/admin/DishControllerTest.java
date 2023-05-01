@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javaops.balykov.restaurantvoting.dto.DishDto;
-import ru.javaops.balykov.restaurantvoting.dto.assembler.DishDtoAssembler;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.repository.DishRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
@@ -27,8 +26,6 @@ class DishControllerTest extends BaseMvcTest {
 
     @Autowired
     private DishRepository repository;
-    @Autowired
-    private DishDtoAssembler assembler;
 
     @Test
     void create() throws Exception {
@@ -37,7 +34,9 @@ class DishControllerTest extends BaseMvcTest {
         dish.setId(null);
         post(RESTAURANT_URL, dish)
                 .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
 //                .andExpect(match(newDish));
         // TODO: 30.04.2023 need matcher
         repository.flush();

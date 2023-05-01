@@ -27,7 +27,11 @@ class UserControllerTest extends BaseMvcTest {
         User user = new User(NEW_USER);
         user.setId(null);
 
-        post(BASE_URL, user).andExpect(status().isCreated());
+        post(BASE_URL, user)
+                .andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
         repository.flush();
         assertThat(repository.findByEmailIgnoreCase(user.getEmail())).isPresent();
     }

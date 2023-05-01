@@ -7,6 +7,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ru.javaops.balykov.restaurantvoting.dto.UserDto;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.ProfileAssembler;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
@@ -26,12 +28,15 @@ public class ProfileController extends BaseController<User> {
     private final UserRepository repository;
     private final EmailUniqueValidator validator;
     private final UserPreparator preparator;
+    private final ProfileAssembler assembler;
 
-    public ProfileController(UserRepository repository, EmailUniqueValidator validator, UserPreparator preparator) {
+    public ProfileController(UserRepository repository, EmailUniqueValidator validator,
+                             UserPreparator preparator, ProfileAssembler assembler) {
         super(repository, log);
         this.repository = repository;
         this.validator = validator;
         this.preparator = preparator;
+        this.assembler = assembler;
     }
 
     @InitBinder
@@ -41,14 +46,14 @@ public class ProfileController extends BaseController<User> {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@Valid @RequestBody User user) {
-        return super.create(preparator.prepareToSave(user));
+    public UserDto create(@Valid @RequestBody User user) {
+        return assembler.toModel(super.doCreate(preparator.prepareToSave(user)));
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public User getAuth(@AuthenticationPrincipal AuthUser authUser) {
-        return authUser.getUser();
+    public UserDto getAuth(@AuthenticationPrincipal AuthUser authUser) {
+        return assembler.toModel(authUser.getUser());
     }
 
     @PutMapping
@@ -66,6 +71,6 @@ public class ProfileController extends BaseController<User> {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        super.delete(authUser.id());
+        super.doDelete(authUser.id());
     }
 }

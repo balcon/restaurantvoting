@@ -2,14 +2,17 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.javaops.balykov.restaurantvoting.dto.RestaurantDto;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.hateoas.IanaLinkRelations.COLLECTION_VALUE;
+import static org.springframework.hateoas.IanaLinkRelations.SELF_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.RestaurantController.BASE_URL;
@@ -27,7 +30,10 @@ class RestaurantControllerTest extends BaseMvcTest {
 
         post(BASE_URL, restaurant)
                 .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists())
+                .andExpect(jsonPath("$._links.dishes").exists());
 //                .andExpect(match(restaurant));
         // TODO: 30.04.2023 need matcher
         repository.flush();
@@ -38,16 +44,19 @@ class RestaurantControllerTest extends BaseMvcTest {
     void getById() throws Exception {
         get(BASE_URL + "/" + REST_1_ID)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(match(REST_1));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists())
+                .andExpect(jsonPath("$._links.dishes").exists());
+//                .andExpect(match(REST_1));
     }
 
     @Test
     void getAll() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("content").isArray());
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._embedded." + RestaurantDto.COLLECTION).isArray());
 //                .andExpect(match(List.of(REST_2, REST_1, REST_3)));
         // TODO: 30.04.2023 need matcher
     }

@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.RepresentationModel;
 
-public interface HalLinksMethods {
+public interface HalLinkMethods {
     RepresentationModel<?> getById(int id);
 
     CollectionModel<? extends RepresentationModel<?>> getAll(Pageable pageable);

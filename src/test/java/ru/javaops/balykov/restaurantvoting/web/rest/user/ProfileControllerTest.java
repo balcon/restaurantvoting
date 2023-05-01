@@ -2,7 +2,7 @@ package ru.javaops.balykov.restaurantvoting.web.rest.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import ru.javaops.balykov.restaurantvoting.model.Role;
@@ -13,6 +13,8 @@ import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.hateoas.IanaLinkRelations.COLLECTION_VALUE;
+import static org.springframework.hateoas.IanaLinkRelations.SELF_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.user.ProfileController.BASE_URL;
@@ -26,7 +28,9 @@ class ProfileControllerTest extends BaseMvcTest {
     void getAuthUser() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).doesNotExist());
 //        .andExpect(match(USER));
         // TODO: 30.04.2023 Need matcher
     }
@@ -38,7 +42,9 @@ class ProfileControllerTest extends BaseMvcTest {
         user.setId(null);
         post(BASE_URL, user)
                 .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).doesNotExist());
 
         assertThat(repository.findByEmailIgnoreCase(user.getEmail())).isPresent();
     }
@@ -67,7 +73,7 @@ class ProfileControllerTest extends BaseMvcTest {
 
     @Test
     @WithAnonymousUser
-    void duplicateEmailWhenRegistered() throws Exception {
+    void duplicateEmailRegistered() throws Exception {
         post(BASE_URL, new User("User", USER_EMAIL, "password"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.details.email").exists());
@@ -75,7 +81,7 @@ class ProfileControllerTest extends BaseMvcTest {
 
     @Test
     @WithUserDetails(USER_EMAIL)
-    void duplicateEmailWhenUpdate() throws Exception {
+    void duplicateEmailUpdate() throws Exception {
         put(BASE_URL, new User("User", ADMIN_EMAIL, "password"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.details.email").exists());
