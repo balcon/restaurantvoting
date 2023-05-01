@@ -2,14 +2,17 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.javaops.balykov.restaurantvoting.dto.UserDto;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseMvcTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.hateoas.IanaLinkRelations.COLLECTION_VALUE;
+import static org.springframework.hateoas.IanaLinkRelations.SELF_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javaops.balykov.restaurantvoting.util.TestData.*;
 import static ru.javaops.balykov.restaurantvoting.web.rest.admin.UserController.BASE_URL;
@@ -33,7 +36,9 @@ class UserControllerTest extends BaseMvcTest {
     void getById() throws Exception {
         get(BASE_URL + "/" + USER_ID)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
+                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
         //.andExpect(match(USER));
         // TODO: 30.04.2023 need matcher
     }
@@ -42,8 +47,8 @@ class UserControllerTest extends BaseMvcTest {
     void getAll() throws Exception {
         get(BASE_URL)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("content").isArray());
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                .andExpect(jsonPath("$._embedded." + UserDto.COLLECTION).isArray());
 //                .andExpect(match(List.of(USER, ADMIN)));
     }
 

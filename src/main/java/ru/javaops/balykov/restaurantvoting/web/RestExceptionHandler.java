@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.javaops.balykov.restaurantvoting.exception.AppException;
 
 import java.util.Map;
@@ -32,6 +33,13 @@ public class RestExceptionHandler {
         log.error(e.getMessage(), e);
         return ResponseEntity.status(e.getErrorCode())
                 .body(new ErrorInfo<>(e.getType(), e.getErrorCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorInfo<String>> typeMismatch(MethodArgumentTypeMismatchException e) {
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ErrorInfo<>("Type mismatch", HttpStatus.UNPROCESSABLE_ENTITY.value(), e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

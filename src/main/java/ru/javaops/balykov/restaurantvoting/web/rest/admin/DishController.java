@@ -2,13 +2,15 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.javaops.balykov.restaurantvoting.dto.DishDto;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.DishDtoAssembler;
 import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.Dish;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
@@ -31,11 +33,13 @@ public class DishController extends BaseController<Dish> {
 
     private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;
+    private final DishDtoAssembler assembler;
 
-    public DishController(DishRepository repository, RestaurantRepository restaurantRepository) {
+    public DishController(DishRepository repository, RestaurantRepository restaurantRepository, DishDtoAssembler assembler) {
         super(repository, log);
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
+        this.assembler = assembler;
     }
 
     @PostMapping(RESTAURANT_URL)
@@ -48,15 +52,22 @@ public class DishController extends BaseController<Dish> {
 
     @GetMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Dish getById(@PathVariable int id) {
-        return super.getById(id);
+    public DishDto getById(@PathVariable int id) {
+        return assembler.toModel(super.baseGetById(id));
     }
+
+//    @GetMapping(BASE_URL)
+//    @ResponseStatus(HttpStatus.OK)
+//    public Page<Dish> baseGetAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
+//                                 @SortDefault("name") Pageable pageable) {
+//        return super.baseGetAll(pageable);
+//    }
 
     @GetMapping(BASE_URL)
     @ResponseStatus(HttpStatus.OK)
-    public Page<Dish> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
-                             @SortDefault("name") Pageable pageable) {
-        return super.getAll(pageable);
+    public CollectionModel<DishDto> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
+                                           @SortDefault("name") Pageable pageable) {
+        return assembler.toCollectionModel(super.baseGetAll(pageable));
     }
 
     @GetMapping(RESTAURANT_URL)

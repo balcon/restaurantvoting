@@ -23,7 +23,7 @@ public abstract class BaseController<T extends BaseEntity> {
         return repository.save(entity);
     }
 
-    protected T getById(int id) {
+    protected T baseGetById(int id) {
         log.info("Get by id [{}]", id);
         Optional<T> optionalEntity = repository.findById(id);
         if (optionalEntity.isEmpty()) {
@@ -32,7 +32,7 @@ public abstract class BaseController<T extends BaseEntity> {
         return optionalEntity.get();
     }
 
-    protected Page<T> getAll(Pageable pageable) {
+    protected Page<T> baseGetAll(Pageable pageable) {
         log.info("Get all with pagination [{}]", pageable);
         return repository.findAll(pageable);
     }

@@ -41,14 +41,14 @@ public class RestaurantController extends BaseController<Restaurant> {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Restaurant getById(@PathVariable int id) {
-        return super.getById(id);
+    public Restaurant baseGetById(@PathVariable int id) {
+        return super.baseGetById(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<Restaurant> getAll(@SortDefault(sort = {"name", "address"}) Pageable pageable) {
-        return super.getAll(pageable);
+    public Page<Restaurant> baseGetAll(@SortDefault(sort = {"name", "address"}) Pageable pageable) {
+        return super.baseGetAll(pageable);
     }
 
     @PutMapping("/{id}")

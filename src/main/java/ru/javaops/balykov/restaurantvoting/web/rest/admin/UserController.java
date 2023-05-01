@@ -2,37 +2,43 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ru.javaops.balykov.restaurantvoting.dto.UserDto;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.UserDtoAssembler;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
+import ru.javaops.balykov.restaurantvoting.web.rest.HalLinks;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
-public class UserController extends BaseController<User> {
+public class UserController extends BaseController<User> implements HalLinks<UserDto> {
     public static final String BASE_URL = API_URL + "/admin/users";
 
     private final UserRepository repository;
     private final EmailUniqueValidator validator;
     private final UserPreparator preparator;
+    private final UserDtoAssembler assembler;
 
-    public UserController(UserRepository repository, EmailUniqueValidator validator, UserPreparator preparator) {
+    public UserController(UserRepository repository, EmailUniqueValidator validator,
+                          UserPreparator preparator, UserDtoAssembler assembler) {
         super(repository, log);
         this.repository = repository;
         this.preparator = preparator;
         this.validator = validator;
+        this.assembler = assembler;
     }
 
     @InitBinder
@@ -48,14 +54,20 @@ public class UserController extends BaseController<User> {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public User getById(@PathVariable int id) {
-        return super.getById(id);
+    public UserDto getById(@PathVariable int id) {
+        return assembler.toModel(super.baseGetById(id));
     }
 
+    //    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public Page<User> baseGetAll(@SortDefault(sort = {"name", "email"}) Pageable pageable) {
+//        return super.baseGetAll(pageable);
+//    }//
+//
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<User> getAll(@SortDefault(sort = {"name", "email"}) Pageable pageable) {
-        return super.getAll(pageable);
+    public CollectionModel<UserDto> getAll(@SortDefault(sort = {"name", "email"}) Pageable pageable) {
+        return assembler.toCollectionModel(super.baseGetAll(pageable));
     }
 
     @PutMapping("/{id}")
