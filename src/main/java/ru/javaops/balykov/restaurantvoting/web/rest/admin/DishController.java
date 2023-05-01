@@ -19,6 +19,7 @@ import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
 import ru.javaops.balykov.restaurantvoting.util.DateTimeUtil;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
+import ru.javaops.balykov.restaurantvoting.web.rest.HalLinksMethods;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +28,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
 @Slf4j
-public class DishController extends BaseController<Dish> {
+public class DishController extends BaseController<Dish> implements HalLinksMethods {
     protected static final String BASE_URL = API_URL + "/admin/dishes";
     protected static final String RESTAURANT_URL = API_URL + "/admin/restaurants/{restaurantId}/dishes";
 

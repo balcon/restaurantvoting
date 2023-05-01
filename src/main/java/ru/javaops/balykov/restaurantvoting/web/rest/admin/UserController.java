@@ -17,14 +17,14 @@ import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinks;
+import ru.javaops.balykov.restaurantvoting.web.rest.HalLinksMethods;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
-public class UserController extends BaseController<User> implements HalLinks<UserDto> {
+public class UserController extends BaseController<User> implements HalLinksMethods {
     public static final String BASE_URL = API_URL + "/admin/users";
 
     private final UserRepository repository;
