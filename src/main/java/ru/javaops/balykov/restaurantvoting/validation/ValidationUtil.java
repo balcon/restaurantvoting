@@ -6,8 +6,6 @@ import ru.javaops.balykov.restaurantvoting.exception.IllegalRequestException;
 import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.BaseEntity;
 
-import java.util.Objects;
-
 @UtilityClass
 public class ValidationUtil {
     public void checkNew(BaseEntity entity) {
@@ -19,7 +17,7 @@ public class ValidationUtil {
     public void assureIdConsistent(BaseEntity entity, int id) {
         if (entity.isNew()) {
             entity.setId(id);
-        } else if (!Objects.equals(entity.getId(), id)) {
+        } else if (!entity.id().equals(id)) {
             throw new IllegalRequestException(entity.getClass().getSimpleName() + " must have id = " + id);
         }
     }

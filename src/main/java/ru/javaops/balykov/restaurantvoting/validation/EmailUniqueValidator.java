@@ -8,8 +8,6 @@ import org.springframework.validation.Validator;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 
-import java.util.Objects;
-
 @Component
 @RequiredArgsConstructor
 public class EmailUniqueValidator implements Validator {
@@ -27,8 +25,7 @@ public class EmailUniqueValidator implements Validator {
         User user = (User) target;
         repository.findByEmailIgnoreCase(user.getEmail())
                 .ifPresent(u -> {
-                    if (request.getMethod().equals("PUT") &&
-                            Objects.equals(u.getId(), user.getId())) {
+                    if (request.getMethod().equals("PUT") && u.id().equals(user.id())) {
                         return;
                     }
                     errors.rejectValue("email", "", "Value already exists");

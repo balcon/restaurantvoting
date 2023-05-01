@@ -14,6 +14,6 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
     }
 
     public Integer id() {
-        return user.getId();
+        return user.id();
     }
 }
