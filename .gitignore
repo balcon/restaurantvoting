@@ -1,7 +1,4 @@
 HELP.md
 target/
-.mvn/
-mvnw
-mvnw.cmd
 restaurantvoting.iml
 /.idea/
