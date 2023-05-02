@@ -1,10 +1,13 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(RestaurantController.BASE_URL)
 @Slf4j
+@Tag(name = "Restaurant controller", description = "CRUD operations for restaurants")
 public class RestaurantController extends BaseController<Restaurant> implements HalLinkMethods {
     protected static final String BASE_URL = API_URL + "/admin/restaurants";
 
@@ -39,23 +43,24 @@ public class RestaurantController extends BaseController<Restaurant> implements 
         binder.addValidators(validator);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantDto create(@Valid @RequestBody Restaurant restaurant) {
         return assembler.toModelWithCollection(super.doCreate(restaurant));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @Override
     public RestaurantDto getById(@PathVariable int id) {
         return assembler.toModelWithCollection(super.doGetById(id));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     @Override
-    public CollectionModel<RestaurantDto> getAll(@SortDefault(sort = {"name", "address"}) Pageable pageable) {
+    public CollectionModel<RestaurantDto> getAll(@SortDefault(sort = {"name", "address"})
+                                                 @ParameterObject Pageable pageable) {
         return assembler.toCollectionModel(super.doGetAll(pageable));
     }
 

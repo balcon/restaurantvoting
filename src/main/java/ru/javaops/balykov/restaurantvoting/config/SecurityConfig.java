@@ -37,10 +37,11 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return email -> {
-            log.info("User [{}] authenticated", email);
             Optional<User> optionalUser = repository.findByEmailIgnoreCase(email);
-            return new AuthUser(optionalUser.orElseThrow(
-                    () -> new UsernameNotFoundException("User " + email + " not found")));
+            AuthUser authUser = new AuthUser(optionalUser.orElseThrow(
+                    () -> new UsernameNotFoundException("User " + email + " not found"))); // TODO: 02.05.2023 handle exception
+            log.info("User [{}] authenticated", email);
+            return authUser;
         };
     }
 
@@ -50,10 +51,10 @@ public class SecurityConfig {
                 .requestMatchers(API_URL + "/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, API_URL + "/user/profile").anonymous()
                 .requestMatchers(API_URL + "/**").hasRole(Role.USER.name())
+                .requestMatchers("/**").anonymous()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
         return http.build();
     }
-
 }

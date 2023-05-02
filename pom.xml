@@ -10,13 +10,13 @@
     </parent>
     <groupId>ru.javaops.balykov</groupId>
     <artifactId>restaurantvoting</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <name>restaurantvoting</name>
     <description>restaurantvoting</description>
     <properties>
         <java.version>17</java.version>
-
         <lombok.version>1.18.26</lombok.version>
+        <springdoc.version>2.1.0</springdoc.version>
     </properties>
     <dependencies>
         <!-- Spring -->
@@ -42,6 +42,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- Persistence  -->

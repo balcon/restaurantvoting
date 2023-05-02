@@ -1,7 +1,10 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.user;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindException;
@@ -22,6 +25,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(ProfileController.BASE_URL)
 @Slf4j
+@Tag(name = "Profile controller", description = "Get, update and delete profile. Registration new user")
 public class ProfileController extends BaseController<User> {
     protected static final String BASE_URL = API_URL + "/user/profile";
 
@@ -44,14 +48,16 @@ public class ProfileController extends BaseController<User> {
         binder.addValidators(validator);
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Registration new user")
     public UserDto create(@Valid @RequestBody User user) {
         return assembler.toModel(super.doCreate(preparator.prepareToSave(user)));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get authenticated user")
     public UserDto getAuth(@AuthenticationPrincipal AuthUser authUser) {
         return assembler.toModel(authUser.getUser());
     }
