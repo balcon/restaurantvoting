@@ -3,7 +3,6 @@ package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javaops.balykov.restaurantvoting.dto.DishDto;
@@ -67,7 +66,7 @@ class DishControllerTest extends BaseMvcTest {
     void getTodaysOfRestaurant() throws Exception {
         get(RESTAURANT_URL)
                 .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(match(REST_1_DISHES));
     }
 
