@@ -25,5 +25,6 @@ API http://188.120.240.222/api
 <details>
 <summary>Test credentials:</summary>
 admin@mail.ru:password
+   
 user@mail.ru:password
 </details>
