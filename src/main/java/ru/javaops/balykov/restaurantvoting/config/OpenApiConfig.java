@@ -23,26 +23,7 @@ import org.springframework.context.annotation.Configuration;
                 version = "0.9.0-SNAPSHOT",
                 description = """
                         <h4><a href='https://topjava.ru/topjava'>Java course</a> graduation project.</h4>
-                        <h4>Technical requirement:</h4>
-                        <p>Design and implement a REST API using Hibernate/Spring/SpringMVC (Spring-Boot preferred!) without frontend.</p>
-                        <p>The task is:</p>
-                        <p>Build a voting system for deciding where to have lunch.</p>
-                        <ul>
-                            <li>2 types of users: admin and regular users</li>
-                            <li>Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a dish name and price)</li>
-                            <li>Menu changes each day (admins do the updates)</li>
-                            <li>Users can vote for a restaurant they want to have lunch at today</li>
-                            <li>Only one vote counted per user</li>
-                            <li>If user votes again the same day:</li>
-                            <ul>
-                                <li>If it is before 11:00 we assume that he changed his mind.</li>
-                                <li>If it is after 11:00 then it is too late, vote can't be changed</li>
-                            </ul>
-                            <li>Each restaurant provides a new menu each day.</li>
-                        <ul>
-                        <p><b>Тестовые креденшелы:</b><br>
-                        - user@gmail.com / password<br>
-                        - admin@javaops.ru / admin</p>
+                        <h4><a href='https://github.com/balcon/restaurantvoting'>Technical requirement and credentials.</a></h4>
                         """,
                 contact = @Contact(
                         url = "https://github.com/balcon",
