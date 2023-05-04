@@ -1,18 +1,14 @@
 spring:
+  profiles:
+    default: dev
+  sql.init.mode: always
   jpa:
-    show-sql: true
     properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
       # https://github.com/spring-projects/spring-data-jpa/issues/2717#issuecomment-1336159936
       jakarta.persistence.sharedCache.mode: UNSPECIFIED
-    hibernate.ddl-auto: create-drop
     defer-datasource-initialization: true
     # https://habr.com/ru/post/440734/
     open-in-view: false
-  datasource.url: jdbc:h2:mem:restaurant_voting;DB_CLOSE_ON_EXIT=FALSE
-
   output.ansi.enabled: always
   main.banner-mode: off
   jackson.visibility:
@@ -21,6 +17,32 @@ spring:
     getter: none
     is-getter: none
     creator: none
-#logging.level.org.springframework:
-#  orm.jpa.JpaTransactionManager: DEBUG
-#  security: DEBUG
+server.servlet.encoding:
+  charset: UTF-8
+  enabled: true
+  force: true
+
+---
+spring:
+  config.activate.on-profile: prod
+  datasource:
+    url: jdbc:h2:./res/restaurant_voting.db
+    username: sa
+    password: change_me
+  jpa:
+    hibernate.ddl-auto: update
+logging:
+  file.name: ./res/restaurant_voting.log
+  pattern.dateformat: yyyy-MM-dd HH:mm:ss
+server.port: 80
+
+---
+spring:
+  config.activate.on-profile: dev, test
+  datasource.url: jdbc:h2:mem:restaurant_voting
+  jpa:
+    hibernate.ddl-auto: create-drop
+    properties:
+      hibernate.format_sql: true
+    show-sql: true
+server.port: 8080
