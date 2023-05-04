@@ -46,7 +46,7 @@ class RestaurantUserControllerTest extends BaseMvcTest {
         LocalDate today = DateTimeUtil.currentDate();
         int count = voteRepository.findByRestaurantAndVoteDate(REST_1, today).size();
 
-        post(BASE_URL + "/" + REST_1_ID).andExpect(status().isNoContent());
+        put(BASE_URL + "/" + REST_1_ID).andExpect(status().isNoContent());
         assertThat(voteRepository.findByRestaurantAndVoteDate(REST_1, today)).hasSize(count + 1);
     }
 }

@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.user;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class RestaurantUserController {
     @Transactional
     public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
                                                                 @SortDefault("dish.name") @ParameterObject Sort sort) {
-
+        log.info("Get restaurant with dishes id: [{}], sort [{}]", id, sort);
         LocalDate voteDate = DateTimeUtil.currentDate();
         Restaurant restaurant = repository.findByIdWithDishesByDate(id, voteDate, sort)
                 .orElseThrow(() -> new NotFoundException(id));
@@ -56,16 +57,18 @@ public class RestaurantUserController {
     @Transactional
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
+        log.info("Get all restaurant with dishes, sort [{}]", sort);
         LocalDate voteDate = DateTimeUtil.currentDate();
         List<Restaurant> restaurants = repository.findAllWithDishesByDate(voteDate, sort);
 
         return assembler.toCollectionModel(restaurants, voteDate);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Vote for restaurant")
     public void vote(@PathVariable int id, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("Vote for restaurant with id [{}]", id);
+        log.info("User [{}] vote for restaurant with id [{}]", authUser.getUser(), id);
         voteService.vote(repository.getReferenceById(id), authUser.getUser());
     }
 }
