@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest.admin;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,7 +27,11 @@ import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
@@ -98,5 +103,29 @@ public class DishController extends BaseController<Dish> implements HalLinkMetho
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         super.doDelete(id);
+    }
+
+    // Only for demonstration
+    @Hidden
+    @PostMapping(BASE_URL + "/demo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void populateDemoDishes() {
+        Random rnd = new Random();
+        restaurantRepository.findAll().stream()
+                .map(Restaurant::id)
+                .forEach(id -> IntStream.range(0, rnd.nextInt(1, 5))
+                        .forEach(i -> this.create(
+                                id, new Dish(null, generateDish(rnd), rnd.nextInt(200, 600) * 100))));
+    }
+
+    private String generateDish(Random random) {
+        String[][] food = {
+                {"Fried", "Boiled", "Marinated", "Fresh"},
+                {"chicken", "duck", "beef", "eggplant"},
+                {"with"},
+                {"tomatoes", "soy sauce", "french fries"}};
+        return Arrays.stream(food)
+                .map(a -> a[random.nextInt(a.length)])
+                .collect(Collectors.joining(" "));
     }
 }

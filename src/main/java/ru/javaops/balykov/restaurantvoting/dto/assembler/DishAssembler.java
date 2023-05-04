@@ -13,7 +13,7 @@ public class DishAssembler extends BaseAssembler<Dish, DishDto> {
     }
 
     @Override
-    protected DishDto of(Dish d) {
+    public DishDto of(Dish d) {
         return new DishDto(d.getName(), d.getPrice(), d.getOfferDate());
     }
 }

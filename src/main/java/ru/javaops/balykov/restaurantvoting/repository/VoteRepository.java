@@ -1,6 +1,7 @@
 package ru.javaops.balykov.restaurantvoting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.model.User;
@@ -16,7 +17,14 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     List<Vote> findByRestaurantAndVoteDate(Restaurant restaurant, LocalDate voteDate);
 
-    List<Vote> findByVoteDate(LocalDate voteDate);
+    int countByRestaurantAndVoteDate(Restaurant restaurant, LocalDate voteDate);
 
-    boolean existsByUserAndVoteDate(User user, LocalDate voteDate);
+    @Query("select v.restaurant as restaurant, count(v.id) as count from Vote v " +
+            "where v.voteDate = :voteDate and v.restaurant in :restaurants group by v.restaurant")
+    List<VotesCount> countRestaurantsVotes(List<Restaurant> restaurants, LocalDate voteDate);
+
+    interface VotesCount {
+        Restaurant getRestaurant();
+        int getCount();
+    }
 }

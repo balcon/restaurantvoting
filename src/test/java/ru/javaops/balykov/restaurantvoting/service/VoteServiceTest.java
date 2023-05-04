@@ -33,7 +33,7 @@ class VoteServiceTest {
     void voteFirstTime() {
         service.vote(REST_1, USER);
 
-        assertThat(repository.existsByUserAndVoteDate(USER, currentDate())).isTrue();
+        assertThat(repository.findByUserAndVoteDate(USER, currentDate())).isPresent();
     }
 
     @Test

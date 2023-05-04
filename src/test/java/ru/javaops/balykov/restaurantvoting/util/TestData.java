@@ -1,10 +1,11 @@
 package ru.javaops.balykov.restaurantvoting.util;
 
 import lombok.experimental.UtilityClass;
-import ru.javaops.balykov.restaurantvoting.model.*;
-import ru.javaops.balykov.restaurantvoting.to.RestaurantTo;
+import ru.javaops.balykov.restaurantvoting.model.Dish;
+import ru.javaops.balykov.restaurantvoting.model.Restaurant;
+import ru.javaops.balykov.restaurantvoting.model.Role;
+import ru.javaops.balykov.restaurantvoting.model.User;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -40,15 +41,6 @@ public class TestData {
             new User(USER_ID, "User", USER_EMAIL, "password", Set.of(Role.USER));
     public final User ADMIN =
             new User(ADMIN_ID, "Admin", ADMIN_EMAIL, "password", Set.of(Role.USER, Role.ADMIN));
-
-    // Restaurant with votes
-    public final Vote VOTE_ADMIN = new Vote(70, REST_1, ADMIN);
-    public final RestaurantTo REST_1_TO =
-            new RestaurantTo(REST_1_ID, REST_1.getName(), REST_1.getAddress(),
-                    REST_1_DISHES, List.of(VOTE_ADMIN));
-    public final RestaurantTo REST_2_TO =
-            new RestaurantTo(REST_2_ID, REST_2.getName(), REST_2.getAddress(),
-                    REST_2_DISHES, Collections.emptyList());
 
     // New entities
     public final Dish NEW_DISH = new Dish(100, "New dish", 100);

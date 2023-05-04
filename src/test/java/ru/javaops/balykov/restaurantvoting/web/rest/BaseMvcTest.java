@@ -47,6 +47,11 @@ public abstract class BaseMvcTest {
                 .andDo(print());
     }
 
+    protected final ResultActions post(String uri) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.post(uri))
+                .andDo(print());
+    }
+
     protected final ResultActions post(String uri, Object object) throws Exception {
         return post(uri, asJson(object));
     }

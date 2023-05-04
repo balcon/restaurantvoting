@@ -1,7 +1,7 @@
 INSERT INTO RESTAURANTS (ID, NAME, ADDRESS)
 VALUES (1, 'Tang-Zhen', 'Nevsky Prospect 74'),
        (2, 'KFC', 'Sredniy Prospect, Vasilievsky island 38/40'),
-       (3, 'Without today''s dish', 'Any address');
+       (3, 'Tang-Zhen', 'Bolshoy Prospect, Vasilievskiy island 19');
 
 INSERT INTO DISHES (ID, NAME, PRICE, RESTAURANT_ID)
 VALUES (3, 'Duck roasted in sweet soy sauce', 50800, 1),
