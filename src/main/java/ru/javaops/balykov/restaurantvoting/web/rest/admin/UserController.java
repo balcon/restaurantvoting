@@ -18,6 +18,7 @@ import ru.javaops.balykov.restaurantvoting.dto.assembler.UserAssembler;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
+import ru.javaops.balykov.restaurantvoting.util.UserUpdateRestrictor;
 import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
@@ -36,14 +37,16 @@ public class UserController extends BaseController<User> implements HalLinkMetho
     private final EmailUniqueValidator validator;
     private final UserPreparator preparator;
     private final UserAssembler assembler;
+    private final UserUpdateRestrictor restrictor;
 
     public UserController(UserRepository repository, EmailUniqueValidator validator,
-                          UserPreparator preparator, UserAssembler assembler) {
+                          UserPreparator preparator, UserAssembler assembler, UserUpdateRestrictor restrictor) {
         super(repository, log);
         this.repository = repository;
         this.preparator = preparator;
         this.validator = validator;
         this.assembler = assembler;
+        this.restrictor = restrictor;
     }
 
     @InitBinder
@@ -79,6 +82,7 @@ public class UserController extends BaseController<User> implements HalLinkMetho
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @RequestBody User user) throws BindException {
         log.info("Update [{}] with id [{}]", user, id);
+        restrictor.check(id);
         ValidationUtil.assureIdConsistent(user, id);
         repository.save(preparator.prepareToUpdate(user, id));
     }

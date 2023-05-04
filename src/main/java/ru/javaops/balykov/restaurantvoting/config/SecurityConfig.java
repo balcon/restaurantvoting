@@ -50,8 +50,9 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers(API_URL + "/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, API_URL + "/user/profile").anonymous()
+                .requestMatchers(API_URL).permitAll()
                 .requestMatchers(API_URL + "/**").hasRole(Role.USER.name())
-                .requestMatchers("/**").anonymous()
+                .requestMatchers("/**").permitAll()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();
