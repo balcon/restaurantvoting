@@ -82,13 +82,14 @@ public class DishController extends BaseController<Dish> implements HalLinkMetho
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     @Operation(summary = "Get all dishes of restaurant")
-    public List<Dish> getAllOfRestaurant(@PathVariable int restaurantId,
-                                         @RequestParam(required = false) LocalDate offerDate,
-                                         @SortDefault("name") Sort sort) {
+    public CollectionModel<DishDto> getAllOfRestaurant(@PathVariable int restaurantId,
+                                                       @RequestParam(required = false) LocalDate offerDate,
+                                                       @SortDefault("name") Sort sort) {
         log.info("Get all of restaurant with id [{}], by date [{}] with sort [{}]", restaurantId, offerDate, sort);
         ValidationUtil.checkIfExists(restaurantRepository, restaurantId);
         offerDate = offerDate == null ? DateTimeUtil.currentDate() : offerDate;
-        return repository.findAllByRestaurantIdAndOfferDate(restaurantId, offerDate, sort);
+        List<Dish> dishes = repository.findAllByRestaurantIdAndOfferDate(restaurantId, offerDate, sort);
+        return assembler.toCollectionModel(dishes, restaurantId);
     }
 
     @PutMapping(BASE_URL + "/{id}")

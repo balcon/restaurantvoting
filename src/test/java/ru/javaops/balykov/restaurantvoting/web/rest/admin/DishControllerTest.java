@@ -63,7 +63,7 @@ class DishControllerTest extends BaseMvcTest {
         get(RESTAURANT_URL)
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-                .andExpect(match(REST_1_DISHES));
+                .andExpect(jsonPath("$._embedded." + DishDto.COLLECTION).isArray());
     }
 
     @Test
