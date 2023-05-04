@@ -15,15 +15,14 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString(callSuper = true)
-public class Vote extends BaseEntity { // todo change ID to restaurant + voteDate
-    @ManyToOne(fetch = FetchType.EAGER) // todo think about fetch
+public class Vote extends BaseEntity {
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.EAGER) // todo think about fetch
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

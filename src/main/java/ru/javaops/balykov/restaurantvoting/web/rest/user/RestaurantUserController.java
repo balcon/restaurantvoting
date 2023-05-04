@@ -10,6 +10,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.javaops.balykov.restaurantvoting.dto.RestaurantWithDishesDto;
 import ru.javaops.balykov.restaurantvoting.dto.assembler.RestaurantWithDishes;
@@ -39,6 +40,7 @@ public class RestaurantUserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
                                                                 @SortDefault("dish.name") @ParameterObject Sort sort) {
 
@@ -51,6 +53,7 @@ public class RestaurantUserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
         LocalDate voteDate = DateTimeUtil.currentDate();

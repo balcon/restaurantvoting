@@ -36,8 +36,6 @@ class DishControllerTest extends BaseMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
                 .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
-//                .andExpect(match(newDish));
-        // TODO: 30.04.2023 need matcher
         repository.flush();
         assertThat(repository.count()).isEqualTo(dishesCount + 1);
     }
@@ -58,8 +56,6 @@ class DishControllerTest extends BaseMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._embedded." + DishDto.COLLECTION).isArray());
-//                .andExpect(match(repository.findAll()));
-        // TODO: 30.04.2023 need matcher
     }
 
     @Test
@@ -86,7 +82,6 @@ class DishControllerTest extends BaseMvcTest {
         assertThat(repository.existsById(DISH_1_ID)).isFalse();
     }
 
-    // TODO: 29.04.2023 refactor it!
     @Test
     void validationErrors() throws Exception {
         expectValidationErrors(post(RESTAURANT_URL, new Dish(null, "", 3000000)));

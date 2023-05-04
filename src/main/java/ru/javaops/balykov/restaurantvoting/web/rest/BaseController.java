@@ -37,17 +37,17 @@ public abstract class BaseController<T extends BaseEntity> {
         return repository.findAll(pageable);
     }
 
-    //    @Transactional
-// TODO: 30.04.2023 transactional breaks custom validators
+    // @Transactional
+    // Transaction breaks custom validators
     protected void doUpdate(int id, T entity) {
         log.info("Update [{}] with id [{}]", entity, id);
         ValidationUtil.assureIdConsistent(entity, id);
-        ValidationUtil.checkIfExists(repository, id); // TODO: 30.04.2023 duplicate checking for dish
+        ValidationUtil.checkIfExists(repository, id);
         repository.save(entity);
     }
 
-    //    @Transactional
-// TODO: 30.04.2023 transactional breaks custom validators
+    // @Transactional
+    // Transaction breaks custom validators
     protected void doDelete(int id) {
         log.info("Delete with id [{}]", id);
         ValidationUtil.checkIfExists(repository, id);

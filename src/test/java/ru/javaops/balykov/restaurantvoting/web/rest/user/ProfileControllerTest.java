@@ -31,8 +31,6 @@ class ProfileControllerTest extends BaseMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
                 .andExpect(jsonPath("$._links." + COLLECTION_VALUE).doesNotExist());
-//        .andExpect(match(USER));
-        // TODO: 30.04.2023 Need matcher
     }
 
     @Test

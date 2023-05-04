@@ -74,8 +74,8 @@ public class UserController extends BaseController<User> implements HalLinkMetho
     }
 
     @PutMapping("/{id}")
-//    @Transactional
-    // TODO: 30.04.2023 transactional breaks custom validatord
+    // @Transactional
+    // Transaction breaks custom validators
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @RequestBody User user) throws BindException {
         log.info("Update [{}] with id [{}]", user, id);

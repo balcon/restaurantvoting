@@ -43,8 +43,6 @@ class UserControllerTest extends BaseMvcTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
                 .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
-        //.andExpect(match(USER));
-        // TODO: 30.04.2023 need matcher
     }
 
     @Test
@@ -53,7 +51,6 @@ class UserControllerTest extends BaseMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._embedded." + UserDto.COLLECTION).isArray());
-//                .andExpect(match(List.of(USER, ADMIN)));
     }
 
     @Test
@@ -101,7 +98,6 @@ class UserControllerTest extends BaseMvcTest {
                 .andExpect(jsonPath("$.details.email").exists());
     }
 
-    // TODO: 29.04.2023 refactor it!
     @Test
     @WithUserDetails(USER_EMAIL)
     void nonAdminAccess() throws Exception {

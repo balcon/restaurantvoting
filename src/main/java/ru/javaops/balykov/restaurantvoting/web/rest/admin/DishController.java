@@ -57,8 +57,9 @@ public class DishController extends BaseController<Dish> implements HalLinkMetho
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new dish for restaurant with current offer date")
     public DishDto create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
-        Restaurant proxy = restaurantRepository.getReferenceById(restaurantId); // todo check if not exists
-        dish.setRestaurant(proxy);
+        Restaurant restaurant =
+                restaurantRepository.findById(restaurantId).orElseThrow(() -> new NotFoundException(restaurantId));
+        dish.setRestaurant(restaurant);
         return assembler.toModelWithCollection(super.doCreate(dish));
     }
 

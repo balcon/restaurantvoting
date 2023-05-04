@@ -34,8 +34,6 @@ class RestaurantControllerTest extends BaseMvcTest {
                 .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
                 .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists())
                 .andExpect(jsonPath("$._links.dishes").exists());
-//                .andExpect(match(restaurant));
-        // TODO: 30.04.2023 need matcher
         repository.flush();
         assertThat(repository.count()).isEqualTo(count + 1);
     }
@@ -57,8 +55,6 @@ class RestaurantControllerTest extends BaseMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                 .andExpect(jsonPath("$._embedded." + RestaurantDto.COLLECTION).isArray());
-//                .andExpect(match(List.of(REST_2, REST_1, REST_3)));
-        // TODO: 30.04.2023 need matcher
     }
 
     @Test
@@ -89,7 +85,6 @@ class RestaurantControllerTest extends BaseMvcTest {
         expectValidationErrors(post(BASE_URL, restaurant));
     }
 
-    // TODO: 29.04.2023 refactor it!
     @Test
     void validationError() throws Exception {
         expectValidationErrors(post(BASE_URL, new Restaurant(null, "", "nope")));
