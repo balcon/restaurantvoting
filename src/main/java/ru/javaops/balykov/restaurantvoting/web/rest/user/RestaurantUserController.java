@@ -42,6 +42,7 @@ public class RestaurantUserController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Transactional
+    @Operation(summary = "Get restaurant with today's dishes and votes")
     public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
                                                                 @SortDefault("dish.name") @ParameterObject Sort sort) {
         log.info("Get restaurant with dishes id: [{}], sort [{}]", id, sort);
@@ -55,6 +56,7 @@ public class RestaurantUserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Transactional
+    @Operation(summary = "Get restaurants with today's dishes and votes")
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
         log.info("Get all restaurant with dishes, sort [{}]", sort);

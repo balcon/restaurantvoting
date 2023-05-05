@@ -1,5 +1,6 @@
 package ru.javaops.balykov.restaurantvoting.web.rest;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import ru.javaops.balykov.restaurantvoting.web.rest.user.RestaurantUserControlle
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Hidden
 @RestController
 @RequestMapping(AppConfig.API_URL)
 public class RootController {

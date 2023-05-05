@@ -21,6 +21,8 @@ server.servlet.encoding:
   charset: UTF-8
   enabled: true
   force: true
+# https://github.com/springdoc/springdoc-openapi/issues/682#issuecomment-1082687594
+springdoc.swagger-ui.defaultModelsExpandDepth: -1
 
 ---
 spring:

@@ -39,7 +39,7 @@ public class SecurityConfig {
         return email -> {
             Optional<User> optionalUser = repository.findByEmailIgnoreCase(email);
             AuthUser authUser = new AuthUser(optionalUser.orElseThrow(
-                    () -> new UsernameNotFoundException("User " + email + " not found"))); // TODO: 02.05.2023 handle exception
+                    () -> new UsernameNotFoundException("User " + email + " not found")));
             log.info("User [{}] authenticated", email);
             return authUser;
         };
