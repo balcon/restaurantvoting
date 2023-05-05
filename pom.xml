@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.javaops.balykov</groupId>
     <artifactId>restaurantvoting</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.9.1</version>
     <name>restaurantvoting</name>
     <description>restaurantvoting</description>
     <properties>
