@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.javaops.balykov.restaurantvoting.util.validation.NoHtml;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Restaurant extends NamedEntity {
     @Column(nullable = false)
     @NotBlank
     @Size(min = 8, max = 64)
+    @NoHtml
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

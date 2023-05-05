@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import ru.javaops.balykov.restaurantvoting.util.validation.NoHtml;
 
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class User extends NamedEntity {
     @Column(nullable = false, unique = true)
     @NotBlank
     @Email
+    @NoHtml
     private String email;
 
     @Column(nullable = false)

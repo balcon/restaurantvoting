@@ -88,6 +88,14 @@ class DishControllerTest extends BaseMvcTest {
     }
 
     @Test
+    void xssValidation() throws Exception{
+        Dish dish = new Dish(null, "<script>alert('xss')</script>", 10000);
+        post(RESTAURANT_URL, dish)
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.details.name").exists());
+    }
+
+    @Test
     @WithUserDetails(USER_EMAIL)
     void nonAdminAccess() throws Exception {
         get(RestaurantController.BASE_URL)
