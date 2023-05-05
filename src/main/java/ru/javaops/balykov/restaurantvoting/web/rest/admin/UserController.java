@@ -19,10 +19,10 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.util.UserUpdateRestrictor;
-import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
-import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
+import ru.javaops.balykov.restaurantvoting.util.validation.EmailUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.util.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.MethodsForAssembler;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
@@ -30,7 +30,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(UserController.BASE_URL)
 @Slf4j
 @Tag(name = "User controller", description = "CRUD operations for users")
-public class UserController extends BaseController<User> implements HalLinkMethods {
+public class UserController extends BaseController<User> implements MethodsForAssembler {
     public static final String BASE_URL = API_URL + "/admin/users";
 
     private final UserRepository repository;

@@ -11,7 +11,7 @@ import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.Role;
 import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
-import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.util.validation.EmailUniqueValidator;
 
 @Component
 @RequiredArgsConstructor

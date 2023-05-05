@@ -16,8 +16,8 @@ import ru.javaops.balykov.restaurantvoting.model.User;
 import ru.javaops.balykov.restaurantvoting.repository.UserRepository;
 import ru.javaops.balykov.restaurantvoting.util.UserPreparator;
 import ru.javaops.balykov.restaurantvoting.util.UserUpdateRestrictor;
-import ru.javaops.balykov.restaurantvoting.validation.EmailUniqueValidator;
-import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
+import ru.javaops.balykov.restaurantvoting.util.validation.EmailUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.util.validation.ValidationUtil;
 import ru.javaops.balykov.restaurantvoting.web.AuthUser;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
 

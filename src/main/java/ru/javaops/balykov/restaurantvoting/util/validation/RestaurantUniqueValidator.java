@@ -1,4 +1,4 @@
-package ru.javaops.balykov.restaurantvoting.validation;
+package ru.javaops.balykov.restaurantvoting.util.validation;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

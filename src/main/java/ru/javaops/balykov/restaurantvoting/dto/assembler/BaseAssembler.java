@@ -9,7 +9,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import ru.javaops.balykov.restaurantvoting.model.BaseEntity;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -17,13 +16,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public abstract class BaseAssembler<E extends BaseEntity, D extends RepresentationModel<?>>
         implements RepresentationModelAssembler<E, D> {
 
-    private final Class<? extends HalLinkMethods> controller;
+    private final Class<? extends MethodsForAssembler> controller;
     @Autowired
     // Suppress IntelliJ IDEA Error: Could not autowire. No beans of 'PagedResourcesAssembler<E>' type found.
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     private PagedResourcesAssembler<E> pagedAssembler;
 
-    protected BaseAssembler(Class<? extends HalLinkMethods> controller) {
+    protected BaseAssembler(Class<? extends MethodsForAssembler> controller) {
         this.controller = controller;
     }
 

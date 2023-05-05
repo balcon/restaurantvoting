@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.javaops.balykov.restaurantvoting.exception.NotFoundException;
 import ru.javaops.balykov.restaurantvoting.model.BaseEntity;
-import ru.javaops.balykov.restaurantvoting.validation.ValidationUtil;
+import ru.javaops.balykov.restaurantvoting.util.validation.ValidationUtil;
 
 import java.util.Optional;
 

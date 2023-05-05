@@ -15,9 +15,9 @@ import ru.javaops.balykov.restaurantvoting.dto.RestaurantDto;
 import ru.javaops.balykov.restaurantvoting.dto.assembler.RestaurantAssembler;
 import ru.javaops.balykov.restaurantvoting.model.Restaurant;
 import ru.javaops.balykov.restaurantvoting.repository.RestaurantRepository;
-import ru.javaops.balykov.restaurantvoting.validation.RestaurantUniqueValidator;
+import ru.javaops.balykov.restaurantvoting.util.validation.RestaurantUniqueValidator;
 import ru.javaops.balykov.restaurantvoting.web.rest.BaseController;
-import ru.javaops.balykov.restaurantvoting.web.rest.HalLinkMethods;
+import ru.javaops.balykov.restaurantvoting.dto.assembler.MethodsForAssembler;
 
 import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 
@@ -25,7 +25,7 @@ import static ru.javaops.balykov.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(RestaurantController.BASE_URL)
 @Slf4j
 @Tag(name = "Restaurant controller", description = "CRUD operations for restaurants")
-public class RestaurantController extends BaseController<Restaurant> implements HalLinkMethods {
+public class RestaurantController extends BaseController<Restaurant> implements MethodsForAssembler {
     protected static final String BASE_URL = API_URL + "/admin/restaurants";
 
     private final RestaurantUniqueValidator validator;
