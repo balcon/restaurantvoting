@@ -1,14 +1,15 @@
 package com.github.balcon.restaurantvoting.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.github.balcon.restaurantvoting.exception.IllegalRequestException;
 import com.github.balcon.restaurantvoting.model.Restaurant;
 import com.github.balcon.restaurantvoting.model.User;
 import com.github.balcon.restaurantvoting.model.Vote;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static com.github.balcon.restaurantvoting.util.DateTimeUtil.*;
@@ -16,6 +17,8 @@ import static com.github.balcon.restaurantvoting.util.DateTimeUtil.*;
 @Service
 @RequiredArgsConstructor
 public class VoteService {
+    public static final LocalTime REVOTE_DEADLINE = LocalTime.of(11, 0);
+
     private final VoteRepository repository;
 
     @Transactional

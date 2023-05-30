@@ -1,7 +1,9 @@
 package com.github.balcon.restaurantvoting.service;
 
+import com.github.balcon.restaurantvoting.exception.IllegalRequestException;
 import com.github.balcon.restaurantvoting.model.Vote;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
+import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import com.github.balcon.restaurantvoting.util.TestData;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import com.github.balcon.restaurantvoting.exception.IllegalRequestException;
-import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 
 import java.time.LocalDate;
 
+import static com.github.balcon.restaurantvoting.util.DateTimeUtil.currentDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static com.github.balcon.restaurantvoting.util.DateTimeUtil.currentDate;
 
 @SpringBootTest
 @Transactional
@@ -42,7 +42,7 @@ class VoteServiceTest {
         LocalDate today = currentDate();
         try (MockedStatic<DateTimeUtil> dateTimeUtilMocked = Mockito.mockStatic(DateTimeUtil.class)) {
             dateTimeUtilMocked.when(DateTimeUtil::currentTime)
-                    .thenReturn(DateTimeUtil.REVOTE_DEADLINE.minusHours(1));
+                    .thenReturn(VoteService.REVOTE_DEADLINE.minusHours(1));
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
@@ -58,7 +58,7 @@ class VoteServiceTest {
         LocalDate today = currentDate();
         try (MockedStatic<DateTimeUtil> dateTimeUtilMocked = Mockito.mockStatic(DateTimeUtil.class)) {
             dateTimeUtilMocked.when(DateTimeUtil::currentTime)
-                    .thenReturn(DateTimeUtil.REVOTE_DEADLINE.plusHours(1));
+                    .thenReturn(VoteService.REVOTE_DEADLINE.plusHours(1));
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
