@@ -1,6 +1,7 @@
 package com.github.balcon.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,12 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(indexes = @Index(name = "votes_date_rest_idx", columnList = "voteDate, restaurant_id"))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "vote_date"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter

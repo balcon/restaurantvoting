@@ -1,19 +1,18 @@
 package com.github.balcon.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.balcon.restaurantvoting.util.validation.NoHtml;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
-import com.github.balcon.restaurantvoting.util.validation.NoHtml;
 
 import java.util.Set;
 
 @Entity
-@Table(name = "users",
-        indexes = @Index(name = "users_email_name_idx", columnList = "email, name"))
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
