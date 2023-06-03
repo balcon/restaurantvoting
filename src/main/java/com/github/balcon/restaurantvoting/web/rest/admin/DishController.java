@@ -1,6 +1,16 @@
 package com.github.balcon.restaurantvoting.web.rest.admin;
 
+import com.github.balcon.restaurantvoting.dto.DishDto;
+import com.github.balcon.restaurantvoting.dto.assembler.DishAssembler;
 import com.github.balcon.restaurantvoting.dto.assembler.MethodsForAssembler;
+import com.github.balcon.restaurantvoting.exception.NotFoundException;
+import com.github.balcon.restaurantvoting.model.Dish;
+import com.github.balcon.restaurantvoting.model.Restaurant;
+import com.github.balcon.restaurantvoting.repository.DishRepository;
+import com.github.balcon.restaurantvoting.repository.RestaurantRepository;
+import com.github.balcon.restaurantvoting.util.DateTimeUtil;
+import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
+import com.github.balcon.restaurantvoting.web.rest.BaseController;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,16 +25,6 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.github.balcon.restaurantvoting.dto.DishDto;
-import com.github.balcon.restaurantvoting.dto.assembler.DishAssembler;
-import com.github.balcon.restaurantvoting.exception.NotFoundException;
-import com.github.balcon.restaurantvoting.model.Dish;
-import com.github.balcon.restaurantvoting.model.Restaurant;
-import com.github.balcon.restaurantvoting.repository.DishRepository;
-import com.github.balcon.restaurantvoting.repository.RestaurantRepository;
-import com.github.balcon.restaurantvoting.util.DateTimeUtil;
-import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
-import com.github.balcon.restaurantvoting.web.rest.BaseController;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -36,6 +36,7 @@ import java.util.stream.IntStream;
 import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
+@RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @Slf4j
 @Tag(name = "Dish controller", description = "CRUD operations for dishes")
 public class DishController extends BaseController<Dish> implements MethodsForAssembler {
@@ -53,7 +54,7 @@ public class DishController extends BaseController<Dish> implements MethodsForAs
         this.assembler = assembler;
     }
 
-    @PostMapping(value = RESTAURANT_URL, produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(value = RESTAURANT_URL)
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new dish for restaurant with current offer date")
     public DishDto create(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
@@ -63,14 +64,14 @@ public class DishController extends BaseController<Dish> implements MethodsForAs
         return assembler.toModelWithCollection(super.doCreate(dish));
     }
 
-    @GetMapping(value = BASE_URL + "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Override
     public DishDto getById(@PathVariable int id) {
         return assembler.toModelWithCollection(super.doGetById(id));
     }
 
-    @GetMapping(value = BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(BASE_URL)
     @ResponseStatus(HttpStatus.OK)
     @Override
     public CollectionModel<DishDto> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
@@ -78,7 +79,7 @@ public class DishController extends BaseController<Dish> implements MethodsForAs
         return assembler.toCollectionModel(super.doGetAll(pageable));
     }
 
-    @GetMapping(value = RESTAURANT_URL, produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping(RESTAURANT_URL)
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     @Operation(summary = "Get all dishes of restaurant")

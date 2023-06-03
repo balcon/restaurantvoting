@@ -84,8 +84,8 @@ class ProfileControllerTest extends BaseMvcTest {
                 .andExpect(jsonPath("$.details.email").exists());
     }
 
-    @WithUserDetails(TestData.USER_EMAIL)
     @Test
+    @WithUserDetails(TestData.USER_EMAIL)
     void updateDifferentId() throws Exception {
         expectIllegalRequest(put(ProfileController.BASE_URL, TestData.ADMIN));
     }

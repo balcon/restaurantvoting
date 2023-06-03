@@ -1,9 +1,15 @@
 package com.github.balcon.restaurantvoting.web.rest.user;
 
+import com.github.balcon.restaurantvoting.dto.UserDto;
 import com.github.balcon.restaurantvoting.dto.assembler.ProfileAssembler;
 import com.github.balcon.restaurantvoting.model.User;
 import com.github.balcon.restaurantvoting.repository.UserRepository;
+import com.github.balcon.restaurantvoting.util.UserPreparator;
+import com.github.balcon.restaurantvoting.util.UserUpdateRestrictor;
 import com.github.balcon.restaurantvoting.util.validation.EmailUniqueValidator;
+import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
+import com.github.balcon.restaurantvoting.web.AuthUser;
+import com.github.balcon.restaurantvoting.web.rest.BaseController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,17 +20,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import com.github.balcon.restaurantvoting.dto.UserDto;
-import com.github.balcon.restaurantvoting.util.UserPreparator;
-import com.github.balcon.restaurantvoting.util.UserUpdateRestrictor;
-import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
-import com.github.balcon.restaurantvoting.web.AuthUser;
-import com.github.balcon.restaurantvoting.web.rest.BaseController;
 
 import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 
 @RestController
-@RequestMapping(ProfileController.BASE_URL)
+@RequestMapping(path = ProfileController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @Slf4j
 @Tag(name = "Profile controller", description = "Get, update and delete profile. Registration new user")
 public class ProfileController extends BaseController<User> {
@@ -51,14 +51,14 @@ public class ProfileController extends BaseController<User> {
         binder.addValidators(validator);
     }
 
-    @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registration new user")
     public UserDto create(@Valid @RequestBody User user) {
         return assembler.toModel(super.doCreate(preparator.prepareToSave(user)));
     }
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get authenticated user")
     public UserDto getAuth(@AuthenticationPrincipal AuthUser authUser) {
