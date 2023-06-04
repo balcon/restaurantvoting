@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Range;
 import java.time.LocalDate;
 
 @Entity
-@Table(indexes = @Index(name = "dishes_rest_date_idx", columnList = "restaurant_id, offerDate"))
+@Table(indexes = @Index(name = "dishes_rest_date_idx", columnList = "restaurant_id, offer_date"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -21,7 +21,7 @@ public class Dish extends NamedEntity {
     @Range(min = 0, max = Integer.MAX_VALUE)
     private Integer price;
 
-    @Column(nullable = false, columnDefinition = "date default CURRENT_DATE()")
+    @Column(name = "offer_date", nullable = false, columnDefinition = "date default CURRENT_DATE()")
     private LocalDate offerDate = DateTimeUtil.currentDate();
 
     @ManyToOne(fetch = FetchType.LAZY)

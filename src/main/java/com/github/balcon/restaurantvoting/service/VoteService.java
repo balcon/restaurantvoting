@@ -15,8 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static com.github.balcon.restaurantvoting.util.DateTimeUtil.currentDate;
-import static com.github.balcon.restaurantvoting.util.DateTimeUtil.currentTime;
+import static com.github.balcon.restaurantvoting.util.DateTimeUtil.*;
 
 @Service
 @RequiredArgsConstructor

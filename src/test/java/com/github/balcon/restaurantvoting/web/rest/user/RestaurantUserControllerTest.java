@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.test.context.support.WithUserDetails;
 
-import static com.github.balcon.restaurantvoting.util.TestData.REST_1_ID;
-import static com.github.balcon.restaurantvoting.util.TestData.USER_EMAIL;
+import static com.github.balcon.restaurantvoting.util.TestData.*;
 import static com.github.balcon.restaurantvoting.web.rest.user.RestaurantUserController.BASE_URL;
 import static org.springframework.hateoas.IanaLinkRelations.COLLECTION_VALUE;
 import static org.springframework.hateoas.IanaLinkRelations.SELF_VALUE;

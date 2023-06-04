@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "voteDate"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "vote_date"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public class Vote extends BaseEntity {
     @JsonIgnore
     private User user;
 
-    @Column(nullable = false, columnDefinition = "date default CURRENT_DATE()")
+    @Column(name = "vote_date", nullable = false, columnDefinition = "date default CURRENT_DATE()")
     private LocalDate voteDate = DateTimeUtil.currentDate();
 
     public Vote(Restaurant restaurant, User user) {
