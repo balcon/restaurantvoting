@@ -1,20 +1,19 @@
 package com.github.balcon.restaurantvoting.web.rest.admin;
 
+import com.github.balcon.restaurantvoting.dto.DishDto;
+import com.github.balcon.restaurantvoting.model.Dish;
+import com.github.balcon.restaurantvoting.repository.DishRepository;
+import com.github.balcon.restaurantvoting.web.rest.BaseMvcTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
-import com.github.balcon.restaurantvoting.dto.DishDto;
-import com.github.balcon.restaurantvoting.model.Dish;
-import com.github.balcon.restaurantvoting.repository.DishRepository;
-import com.github.balcon.restaurantvoting.web.rest.BaseMvcTest;
 
+import static com.github.balcon.restaurantvoting.util.TestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.hateoas.IanaLinkRelations.COLLECTION_VALUE;
 import static org.springframework.hateoas.IanaLinkRelations.SELF_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static com.github.balcon.restaurantvoting.util.TestData.*;
 
 @WithUserDetails(ADMIN_EMAIL)
 class DishControllerTest extends BaseMvcTest {
@@ -33,8 +32,7 @@ class DishControllerTest extends BaseMvcTest {
         post(RESTAURANT_URL, dish)
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
-                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists());
         repository.flush();
         assertThat(repository.count()).isEqualTo(dishesCount + 1);
     }
@@ -44,17 +42,7 @@ class DishControllerTest extends BaseMvcTest {
         get(DishController.BASE_URL + "/" + DISH_1_ID)
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._links." + SELF_VALUE).exists())
-                .andExpect(jsonPath("$._links." + COLLECTION_VALUE).exists());
-//                .andExpect(match(assembler.toModel(DISH_1)));
-    }
-
-    @Test
-    void getAll() throws Exception {
-        get(DishController.BASE_URL)
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._embedded." + DishDto.COLLECTION).isArray());
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists());
     }
 
     @Test
@@ -62,7 +50,8 @@ class DishControllerTest extends BaseMvcTest {
         get(RESTAURANT_URL)
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-                .andExpect(jsonPath("$._embedded." + DishDto.COLLECTION).isArray());
+                .andExpect(jsonPath("$._embedded." + DishDto.COLLECTION).isArray())
+                .andExpect(jsonPath("$._links." + SELF_VALUE).exists());
     }
 
     @Test
@@ -87,7 +76,7 @@ class DishControllerTest extends BaseMvcTest {
     }
 
     @Test
-    void xssValidation() throws Exception{
+    void xssValidation() throws Exception {
         Dish dish = new Dish(null, "<script>alert('xss')</script>", 10000);
         post(RESTAURANT_URL, dish)
                 .andExpect(status().isUnprocessableEntity())

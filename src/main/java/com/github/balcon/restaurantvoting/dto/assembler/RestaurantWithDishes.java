@@ -1,6 +1,8 @@
 package com.github.balcon.restaurantvoting.dto.assembler;
 
 import com.github.balcon.restaurantvoting.dto.DishDto;
+import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
+import com.github.balcon.restaurantvoting.model.Restaurant;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
 import com.github.balcon.restaurantvoting.web.rest.user.RestaurantUserController;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +11,6 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
-import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
-import com.github.balcon.restaurantvoting.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +28,7 @@ public class RestaurantWithDishes {
 
     public RestaurantWithDishesDto toModel(Restaurant r) {
         List<DishDto> dishDtos = r.getDishes().stream()
-                .map(dishAssembler::of)
+                .map(dishAssembler::toModel)
                 .toList();
         RestaurantWithDishesDto dto = new RestaurantWithDishesDto(r.getName(), r.getAddress(), dishDtos);
         dto.add(WebMvcLinkBuilder.linkTo(methodOn(RestaurantUserController.class).getById(r.id(), Sort.unsorted())).withSelfRel());

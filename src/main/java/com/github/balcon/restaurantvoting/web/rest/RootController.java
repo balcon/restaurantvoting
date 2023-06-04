@@ -1,10 +1,8 @@
 package com.github.balcon.restaurantvoting.web.rest;
 
 import com.github.balcon.restaurantvoting.config.AppConfig;
-import com.github.balcon.restaurantvoting.dto.DishDto;
 import com.github.balcon.restaurantvoting.dto.RestaurantDto;
 import com.github.balcon.restaurantvoting.dto.UserDto;
-import com.github.balcon.restaurantvoting.web.rest.admin.DishController;
 import com.github.balcon.restaurantvoting.web.rest.admin.RestaurantController;
 import com.github.balcon.restaurantvoting.web.rest.admin.UserController;
 import com.github.balcon.restaurantvoting.web.rest.user.ProfileController;
@@ -30,7 +28,6 @@ public class RootController {
         RepresentationModel<?> root = new RepresentationModel<>();
         root.add(linkTo(methodOn(UserController.class).getAll(null)).withRel(UserDto.COLLECTION));
         root.add(linkTo(methodOn(RestaurantController.class).getAll(null)).withRel(RestaurantDto.COLLECTION));
-        root.add(linkTo(methodOn(DishController.class).getAll(null)).withRel(DishDto.COLLECTION));
         root.add(linkTo(methodOn(ProfileController.class).getAuth(null)).withRel("profile"));
         root.add(linkTo(methodOn(RestaurantUserController.class).getAll(null)).withRel("restaurants-with-dishes"));
         root.add(linkTo(methodOn(VoteController.class).getToday(null, Optional.empty())).withRel("vote"));

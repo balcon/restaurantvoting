@@ -2,7 +2,6 @@ package com.github.balcon.restaurantvoting.web.rest.admin;
 
 import com.github.balcon.restaurantvoting.dto.DishDto;
 import com.github.balcon.restaurantvoting.dto.assembler.DishAssembler;
-import com.github.balcon.restaurantvoting.dto.assembler.MethodsForAssembler;
 import com.github.balcon.restaurantvoting.exception.NotFoundException;
 import com.github.balcon.restaurantvoting.model.Dish;
 import com.github.balcon.restaurantvoting.model.Restaurant;
@@ -16,8 +15,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.CollectionModel;
@@ -39,7 +36,7 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @Slf4j
 @Tag(name = "Dish controller", description = "CRUD operations for dishes")
-public class DishController extends BaseController<Dish> implements MethodsForAssembler {
+public class DishController extends BaseController<Dish> {
     protected static final String BASE_URL = API_URL + "/admin/dishes";
     protected static final String RESTAURANT_URL = API_URL + "/admin/restaurants/{restaurantId}/dishes";
 
@@ -61,22 +58,13 @@ public class DishController extends BaseController<Dish> implements MethodsForAs
         Restaurant restaurant =
                 restaurantRepository.findById(restaurantId).orElseThrow(() -> new NotFoundException(restaurantId));
         dish.setRestaurant(restaurant);
-        return assembler.toModelWithCollection(super.doCreate(dish));
+        return assembler.toModel(super.doCreate(dish));
     }
 
     @GetMapping(BASE_URL + "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Override
     public DishDto getById(@PathVariable int id) {
-        return assembler.toModelWithCollection(super.doGetById(id));
-    }
-
-    @GetMapping(BASE_URL)
-    @ResponseStatus(HttpStatus.OK)
-    @Override
-    public CollectionModel<DishDto> getAll(@SortDefault(sort = "offerDate", direction = Sort.Direction.DESC)
-                                           @SortDefault("name") @ParameterObject Pageable pageable) {
-        return assembler.toCollectionModel(super.doGetAll(pageable));
+        return assembler.toModel(super.doGetById(id));
     }
 
     @GetMapping(RESTAURANT_URL)
@@ -116,7 +104,7 @@ public class DishController extends BaseController<Dish> implements MethodsForAs
         Random rnd = new Random();
         restaurantRepository.findAll().stream()
                 .map(Restaurant::id)
-                .forEach(id -> IntStream.range(0, rnd.nextInt(1, 5))
+                .forEach(id -> IntStream.range(0, rnd.nextInt(2, 5))
                         .forEach(i -> this.create(
                                 id, new Dish(null, generateDish(rnd), rnd.nextInt(200, 600) * 100))));
     }
