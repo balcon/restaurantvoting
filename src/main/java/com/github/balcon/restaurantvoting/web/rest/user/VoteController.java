@@ -29,16 +29,16 @@ public class VoteController {
 
     @GetMapping
     public ResponseEntity<Vote> getToday(@AuthenticationPrincipal AuthUser authUser,
-                                         @RequestParam(name = "vote_date", required = false) Optional<LocalDate> date) {
-        log.info("Get vote by date [{}]", date);
-        LocalDate voteDate = date.orElseGet(DateTimeUtil::currentDate);
-        return ResponseEntity.of(service.get(authUser.getUser(), voteDate));
+                                         @RequestParam(required = false) Optional<LocalDate> voteDate) {
+        log.info("Get vote by date [{}]", voteDate);
+        LocalDate date = voteDate.orElseGet(DateTimeUtil::currentDate);
+        return ResponseEntity.of(service.get(authUser.getUser(), date));
     }
 
     @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@AuthenticationPrincipal AuthUser authUser,
-                     @RequestParam("restaurant_id") int restaurantId) {
+                     @RequestParam int restaurantId) {
         log.info("User [{}] vote for restaurant with id [{}]", authUser.getUser(), restaurantId);
         service.vote(restaurantId, authUser.getUser());
     }

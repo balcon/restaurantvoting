@@ -33,7 +33,7 @@ class VoteControllerTest extends BaseMvcTest {
     @Test
     @WithUserDetails(USER_EMAIL)
     void getYesterdaysVote() throws Exception {
-        get(BASE_URL + "?vote_date=" + DateTimeUtil.currentDate().minusDays(1))
+        get(BASE_URL + "?voteDate=" + DateTimeUtil.currentDate().minusDays(1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.restaurant").exists());
     }
@@ -41,7 +41,7 @@ class VoteControllerTest extends BaseMvcTest {
     @Test
     @WithUserDetails(USER_EMAIL)
     void vote() throws Exception {
-        patch(BASE_URL + "?restaurant_id=" + REST_1_ID)
+        patch(BASE_URL + "?restaurantId=" + REST_1_ID)
                 .andExpect(status().isNoContent());
 
         assertThat(repository.findByUserAndVoteDate(USER, DateTimeUtil.currentDate())).isPresent();
