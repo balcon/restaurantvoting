@@ -36,7 +36,7 @@ public class OpenApiConfig {
     public GroupedOpenApi adminApi() {
         return GroupedOpenApi.builder()
                 .group("Admin API")
-                .pathsToMatch(AppConfig.API_URL + "/**")
+                .pathsToMatch(AppConfig.API_URL + "/admin/**")
                 .build();
     }
 

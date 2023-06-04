@@ -11,14 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static com.github.balcon.restaurantvoting.exception.IllegalRequestException.ILLEGAL_REQUEST;
 import static com.github.balcon.restaurantvoting.exception.NotFoundException.NOT_FOUND;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,8 +36,8 @@ public abstract class BaseMvcTest {
                 .andDo(print());
     }
 
-    protected final ResultActions put(String uri) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders.put(uri))
+    protected final ResultActions patch(String uri) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.patch(uri))
                 .andDo(print());
     }
 
@@ -66,10 +66,6 @@ public abstract class BaseMvcTest {
     protected final ResultActions delete(String uri) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.delete(uri))
                 .andDo(print());
-    }
-
-    protected final ResultMatcher match(Object object) throws JsonProcessingException {
-        return content().json(asJson(object));
     }
 
     protected void expectNotFound(ResultActions resultActions) throws Exception {
