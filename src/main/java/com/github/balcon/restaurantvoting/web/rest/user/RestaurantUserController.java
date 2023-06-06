@@ -2,9 +2,8 @@ package com.github.balcon.restaurantvoting.web.rest.user;
 
 import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
 import com.github.balcon.restaurantvoting.dto.assembler.RestaurantWithDishes;
-import com.github.balcon.restaurantvoting.exception.NotFoundException;
 import com.github.balcon.restaurantvoting.model.Restaurant;
-import com.github.balcon.restaurantvoting.repository.RestaurantRepository;
+import com.github.balcon.restaurantvoting.service.RestaurantService;
 import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
@@ -33,7 +31,7 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 public class RestaurantUserController {
     protected static final String BASE_URL = API_URL + "/user/restaurants";
 
-    private final RestaurantRepository repository;
+    private final RestaurantService service;
     private final RestaurantWithDishes assembler;
 
     @GetMapping("/{id}")
@@ -42,12 +40,8 @@ public class RestaurantUserController {
     @Operation(summary = "Get restaurant with today's dishes and votes")
     public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
                                                                 @SortDefault("dish.name") @ParameterObject Sort sort) {
-        log.info("Get restaurant with dishes id: [{}], sort [{}]", id, sort);
-        LocalDate voteDate = DateTimeUtil.currentDate();
-        Restaurant restaurant = repository.findByIdWithDishesByDate(id, voteDate, sort)
-                .orElseThrow(() -> new NotFoundException(id));
-
-        return assembler.toModelWithCollection(restaurant, voteDate);
+        Restaurant restaurant = service.getWithDishes(id, sort);
+        return assembler.toModelWithCollection(restaurant, DateTimeUtil.currentDate());
     }
 
     @GetMapping
@@ -56,10 +50,7 @@ public class RestaurantUserController {
     @Operation(summary = "Get restaurants with today's dishes and votes")
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
-        log.info("Get all restaurant with dishes, sort [{}]", sort);
-        LocalDate voteDate = DateTimeUtil.currentDate();
-        List<Restaurant> restaurants = repository.findAllWithDishesByDate(voteDate, sort);
-
-        return assembler.toCollectionModel(restaurants, voteDate);
+        List<Restaurant> restaurants = service.getAllWithDishes(sort);
+        return assembler.toCollectionModel(restaurants, DateTimeUtil.currentDate());
     }
 }
