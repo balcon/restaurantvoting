@@ -37,14 +37,18 @@ public class RestaurantService {
     public void update(int id, Restaurant restaurant) {
         log.info("Update restaurant with id [{}] new values [{}]", id, restaurant);
         ValidationUtil.assureIdConsistent(restaurant, id);
-        ValidationUtil.checkIfExists(repository, id);
+        checkIfExists(id);
         repository.save(restaurant);
     }
 
     @Transactional
     public void delete(int id) {
         log.info("Delete restaurant with id [{}]", id);
-        ValidationUtil.checkIfExists(repository, id);
+        checkIfExists(id);
         repository.deleteById(id);
+    }
+
+    public void checkIfExists(int id) {
+        ValidationUtil.checkIfExists(repository, id);
     }
 }
