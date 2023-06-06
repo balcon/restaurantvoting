@@ -13,16 +13,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.SmartValidator;
 
+/**
+ * Use for preparing User before create or update.
+ * Set default roles, encode password, validate fields etc.
+ */
+
 @Component
 @RequiredArgsConstructor
 public class UserPreparator {
 
     private final PasswordEncoder encoder;
     private final UserRepository repository;
-    private final SmartValidator validator;
+    private final SmartValidator baseValidator;
     private final EmailUniqueValidator emailUniqueValidator;
 
-    public User prepareToSave(User user) {
+    public User prepareToCreate(User user) {
         user.setRoles(Role.DEFAULT_ROLES);
         user.setEmail(user.getEmail().toLowerCase());
         user.setPassword(encoder.encode(user.getPassword()));
@@ -31,10 +36,6 @@ public class UserPreparator {
 
     public User prepareToUpdate(User newUser, int id) throws BindException {
         User oldUser = repository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        return prepareToUpdate(newUser, oldUser);
-    }
-
-    public User prepareToUpdate(User newUser, User oldUser) throws BindException {
         if (newUser.getPassword() == null || newUser.getPassword().isEmpty()) {
             newUser.setPassword(oldUser.getPassword());
             validate(newUser);
@@ -48,10 +49,10 @@ public class UserPreparator {
 
     // This is manual validation, because the user can be updated without changing his password.
     // In @RequestBody controller can get json without password.
-    // If password is null, the User must be validated after the password is set and before it be encrypted.
+    // If password is null, the User must be validated after the password is set and before password be encrypted.
     private void validate(User user) throws BindException {
         DataBinder dataBinder = new DataBinder(user);
-        dataBinder.addValidators(validator, emailUniqueValidator);
+        dataBinder.addValidators(baseValidator, emailUniqueValidator);
         dataBinder.validate();
         BindingResult bindingResult = dataBinder.getBindingResult();
         if (bindingResult.hasErrors()) {
