@@ -4,6 +4,7 @@ import com.github.balcon.restaurantvoting.dto.DishDto;
 import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
 import com.github.balcon.restaurantvoting.model.Restaurant;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
+import com.github.balcon.restaurantvoting.service.VoteService;
 import com.github.balcon.restaurantvoting.web.rest.user.RestaurantUserController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -12,7 +13,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,9 +22,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 @RequiredArgsConstructor
-public class RestaurantWithDishes {
+public class RestaurantWithDishesAssembler {
     private final DishAssembler dishAssembler;
-    private final VoteRepository voteRepository;
+    private final VoteService service;
 
     public RestaurantWithDishesDto toModel(Restaurant r) {
         List<DishDto> dishDtos = r.getDishes().stream()
@@ -35,21 +35,21 @@ public class RestaurantWithDishes {
         return dto;
     }
 
-    public RestaurantWithDishesDto toModel(Restaurant r, LocalDate voteDate) {
-        RestaurantWithDishesDto dto = toModel(r);
-        dto.setVotes(voteRepository.countByRestaurantAndVoteDate(r, voteDate));
+    public RestaurantWithDishesDto toModelWithVotes(Restaurant res) {
+        RestaurantWithDishesDto dto = toModel(res);
+        dto.setVotes(service.count(res));
         return dto;
     }
 
-    public RestaurantWithDishesDto toModelWithCollection(Restaurant r, LocalDate voteDate) {
-        RestaurantWithDishesDto dto = toModel(r, voteDate);
+    public RestaurantWithDishesDto toModelWithCollection(Restaurant r) {
+        RestaurantWithDishesDto dto = toModelWithVotes(r);
         dto.add(linkTo(methodOn(RestaurantUserController.class).getAll(Sort.unsorted()))
                 .withRel(IanaLinkRelations.COLLECTION));
         return dto;
     }
 
-    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants, LocalDate voteDate) {
-        Map<Restaurant, Integer> votes = voteRepository.countRestaurantsVotes(restaurants, voteDate).stream()
+    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants) {
+        Map<Restaurant, Integer> votes = service.countAll(restaurants).stream()
                 .collect(Collectors.toMap(VoteRepository.VotesCount::getRestaurant, VoteRepository.VotesCount::getCount));
         CollectionModel<RestaurantWithDishesDto> dtos = CollectionModel.of(restaurants.stream()
                 .map(r -> {

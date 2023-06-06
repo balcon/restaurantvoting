@@ -32,7 +32,7 @@ class VoteServiceTest {
 
     @Test
     void voteFirstTime() {
-        service.vote(TestData.REST_1_ID, TestData.USER);
+        service.doVote(TestData.REST_1_ID, TestData.USER);
 
         Assertions.assertThat(repository.findByUserAndVoteDate(TestData.USER, currentDate())).isPresent();
     }
@@ -46,7 +46,7 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            service.vote(TestData.REST_2_ID, TestData.ADMIN);
+            service.doVote(TestData.REST_2_ID, TestData.ADMIN);
             Vote vote = repository.findByUserAndVoteDate(TestData.ADMIN, today).orElseThrow();
 
             assertThat(vote.getRestaurant()).isEqualTo(TestData.REST_2);
@@ -62,7 +62,7 @@ class VoteServiceTest {
             dateTimeUtilMocked.when(DateTimeUtil::currentDate)
                     .thenReturn(today);
 
-            assertThrows(IllegalRequestException.class, () -> service.vote(TestData.REST_2_ID, TestData.ADMIN));
+            assertThrows(IllegalRequestException.class, () -> service.doVote(TestData.REST_2_ID, TestData.ADMIN));
         }
     }
 }

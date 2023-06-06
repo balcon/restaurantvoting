@@ -40,6 +40,6 @@ public class VoteController {
     public void vote(@AuthenticationPrincipal AuthUser authUser,
                      @RequestParam int restaurantId) {
         log.info("User [{}] vote for restaurant with id [{}]", authUser.getUser(), restaurantId);
-        service.vote(restaurantId, authUser.getUser());
+        service.doVote(restaurantId, authUser.getUser());
     }
 }

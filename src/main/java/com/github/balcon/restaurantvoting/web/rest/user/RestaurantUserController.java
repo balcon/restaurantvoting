@@ -1,10 +1,9 @@
 package com.github.balcon.restaurantvoting.web.rest.user;
 
 import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
-import com.github.balcon.restaurantvoting.dto.assembler.RestaurantWithDishes;
+import com.github.balcon.restaurantvoting.dto.assembler.RestaurantWithDishesAssembler;
 import com.github.balcon.restaurantvoting.model.Restaurant;
 import com.github.balcon.restaurantvoting.service.RestaurantService;
-import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,7 @@ public class RestaurantUserController {
     protected static final String BASE_URL = API_URL + "/user/restaurants";
 
     private final RestaurantService service;
-    private final RestaurantWithDishes assembler;
+    private final RestaurantWithDishesAssembler assembler;
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -41,7 +40,7 @@ public class RestaurantUserController {
     public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
                                                                 @SortDefault("dish.name") @ParameterObject Sort sort) {
         Restaurant restaurant = service.getWithDishes(id, sort);
-        return assembler.toModelWithCollection(restaurant, DateTimeUtil.currentDate());
+        return assembler.toModelWithCollection(restaurant);
     }
 
     @GetMapping
@@ -51,6 +50,6 @@ public class RestaurantUserController {
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
         List<Restaurant> restaurants = service.getAllWithDishes(sort);
-        return assembler.toCollectionModel(restaurants, DateTimeUtil.currentDate());
+        return assembler.toCollectionModel(restaurants);
     }
 }
