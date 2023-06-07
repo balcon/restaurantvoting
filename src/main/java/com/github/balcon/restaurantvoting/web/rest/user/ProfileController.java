@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +22,6 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = ProfileController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Profile controller", description = "Get, update and delete profile. Registration new user")
 public class ProfileController {
     protected static final String BASE_URL = API_URL + "/user/profile";

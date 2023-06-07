@@ -6,7 +6,6 @@ import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import com.github.balcon.restaurantvoting.web.AuthUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +19,6 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(VoteController.BASE_URL)
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Vote controller", description = "Vote for restaurant and get users votes")
 public class VoteController {
     protected static final String BASE_URL = API_URL + "/user/vote";
@@ -30,7 +28,6 @@ public class VoteController {
     @GetMapping
     public ResponseEntity<Vote> getToday(@AuthenticationPrincipal AuthUser authUser,
                                          @RequestParam(required = false) Optional<LocalDate> voteDate) {
-        log.info("Get vote by date [{}]", voteDate);
         LocalDate date = voteDate.orElseGet(DateTimeUtil::currentDate);
         return ResponseEntity.of(service.get(authUser.getUser(), date));
     }
@@ -39,7 +36,6 @@ public class VoteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@AuthenticationPrincipal AuthUser authUser,
                      @RequestParam int restaurantId) {
-        log.info("User [{}] vote for restaurant with id [{}]", authUser.getUser(), restaurantId);
         service.doVote(restaurantId, authUser.getUser());
     }
 }

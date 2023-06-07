@@ -9,7 +9,6 @@ import com.github.balcon.restaurantvoting.util.validation.RestaurantUniqueValida
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -24,7 +23,6 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = RestaurantController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Restaurant controller", description = "CRUD operations for restaurants")
 public class RestaurantController implements MethodsForAssembler {
     protected static final String BASE_URL = API_URL + "/admin/restaurants";

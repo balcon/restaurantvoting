@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.CollectionModel;
@@ -24,7 +23,6 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Dish controller", description = "CRUD operations for dishes")
 public class DishController {
     protected static final String BASE_URL = API_URL + "/admin/dishes";

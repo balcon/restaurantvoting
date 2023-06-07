@@ -4,10 +4,10 @@ import com.github.balcon.restaurantvoting.dto.RestaurantWithDishesDto;
 import com.github.balcon.restaurantvoting.dto.assembler.RestaurantWithDishesAssembler;
 import com.github.balcon.restaurantvoting.model.Restaurant;
 import com.github.balcon.restaurantvoting.service.RestaurantService;
+import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
@@ -25,7 +25,6 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = RestaurantUserController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
-@Slf4j
 @Tag(name = "Restaurant and dish controller", description = "Get restaurants with dishes")
 public class RestaurantUserController {
     protected static final String BASE_URL = API_URL + "/user/restaurants";
@@ -49,7 +48,7 @@ public class RestaurantUserController {
     @Operation(summary = "Get restaurants with today's dishes and votes")
     public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
                                                            @ParameterObject Sort sort) {
-        List<Restaurant> restaurants = service.getAllWithDishes(sort);
+        List<Restaurant> restaurants = service.getAllWithDishes(DateTimeUtil.currentDate(), sort);
         return assembler.toCollectionModel(restaurants);
     }
 }
