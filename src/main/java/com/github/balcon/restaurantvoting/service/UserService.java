@@ -9,6 +9,8 @@ import com.github.balcon.restaurantvoting.util.validation.UserValidator;
 import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,8 @@ import org.springframework.validation.BindException;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
+    public static final String USERS_CACHE = "users";
+
     private final UserRepository repository;
     private final UserValidator validator;
     private final UserModificationRestrictor restrictor;
@@ -37,7 +41,7 @@ public class UserService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    // TODO: 06.06.2023 cache
+    @Cacheable(cacheNames = USERS_CACHE, key = "#email")
     public User get(String email) {
         log.info("Get user with email [{}]", email);
         return repository.findByEmailIgnoreCase(email)
@@ -49,7 +53,7 @@ public class UserService {
         return repository.findAll(pageable);
     }
 
-    // TODO: 06.06.2023 cache
+    @CacheEvict(cacheNames = USERS_CACHE, allEntries = true)
     @Transactional
     public void update(int id, User user) throws BindException {
         log.info("Update user with id [{}] new values [{}]", id, user);
@@ -58,7 +62,7 @@ public class UserService {
         repository.save(prepareToUpdate(user, id));
     }
 
-    // TODO: 06.06.2023 cache
+    @CacheEvict(cacheNames = USERS_CACHE, allEntries = true)
     @Transactional
     public void delete(int id) {
         log.info("Delete user with id [{}]", id);

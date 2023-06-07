@@ -48,3 +48,6 @@ spring:
       hibernate.format_sql: true
     show-sql: true
 server.port: 8080
+logging.level:
+  org.springframework.cache: trace
+  org.springframework.transaction.interceptor: trace

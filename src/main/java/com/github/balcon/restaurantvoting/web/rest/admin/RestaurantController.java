@@ -39,7 +39,7 @@ public class RestaurantController implements MethodsForAssembler {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // TODO: 06.06.2023 Transaction for unique validator?
+    @ResponseStatus(HttpStatus.CREATED)
     public RestaurantDto create(@Valid @RequestBody Restaurant restaurant) {
         return assembler.toModelWithCollection(service.create(restaurant));
     }
