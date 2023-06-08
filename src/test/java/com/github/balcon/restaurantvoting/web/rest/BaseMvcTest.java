@@ -3,16 +3,14 @@ package com.github.balcon.restaurantvoting.web.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.balcon.restaurantvoting.BaseTest;
 import com.github.balcon.restaurantvoting.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.balcon.restaurantvoting.exception.IllegalRequestException.ILLEGAL_REQUEST;
 import static com.github.balcon.restaurantvoting.exception.NotFoundException.NOT_FOUND;
@@ -20,11 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
-@ActiveProfiles("test")
-public abstract class BaseMvcTest {
+public abstract class BaseMvcTest extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
 

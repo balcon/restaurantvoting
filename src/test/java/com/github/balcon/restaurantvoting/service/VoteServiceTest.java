@@ -1,5 +1,6 @@
 package com.github.balcon.restaurantvoting.service;
 
+import com.github.balcon.restaurantvoting.BaseTest;
 import com.github.balcon.restaurantvoting.exception.IllegalRequestException;
 import com.github.balcon.restaurantvoting.model.Vote;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
@@ -10,9 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -20,10 +18,7 @@ import static com.github.balcon.restaurantvoting.util.DateTimeUtil.currentDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@Transactional
-@ActiveProfiles("test")
-class VoteServiceTest {
+class VoteServiceTest extends BaseTest {
     @Autowired
     VoteRepository repository;
 
