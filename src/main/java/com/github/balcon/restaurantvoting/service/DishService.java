@@ -7,7 +7,6 @@ import com.github.balcon.restaurantvoting.repository.DishRepository;
 import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,7 +25,6 @@ import static java.util.Objects.requireNonNullElse;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DishService {
     private final DishRepository repository;
     private final RestaurantService restaurantService;
@@ -34,20 +32,17 @@ public class DishService {
     @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public Dish create(int restaurantId, Dish dish) {
-        log.info("Create new dish [{}] in restaurant with id [{}]", dish, restaurantId);
         ValidationUtil.checkNew(dish);
         dish.setRestaurant(restaurantService.get(restaurantId));
         return repository.save(dish);
     }
 
     public Dish get(int id) {
-        log.info("Get dish with id [{}]", id);
         return repository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     @Transactional
     public List<Dish> getAll(int restaurantId, LocalDate offerDate, Sort sort) {
-        log.info("Get dishes of restaurant with id [{}], by date [{}] with sort [{}]", restaurantId, offerDate, sort);
         restaurantService.checkIfExists(restaurantId);
         return repository.findAllByRestaurantIdAndOfferDate(
                 restaurantId, requireNonNullElse(offerDate, DateTimeUtil.currentDate()), sort);
@@ -56,7 +51,6 @@ public class DishService {
     @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void update(int id, Dish dish) {
-        log.info("Update dish with id [{}] new values [{}]", id, dish);
         ValidationUtil.assureIdConsistent(dish, id);
         ValidationUtil.checkIfExists(repository, id);
         dish.setRestaurant(this.get(id).getRestaurant());
@@ -66,7 +60,6 @@ public class DishService {
     @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void delete(int id) {
-        log.info("Delete dish with id [{}]", id);
         ValidationUtil.checkIfExists(repository, id);
         repository.deleteById(id);
     }

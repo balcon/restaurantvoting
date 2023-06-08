@@ -30,7 +30,7 @@ public class RootController {
         root.add(linkTo(methodOn(RestaurantController.class).getAll(null)).withRel(RestaurantDto.COLLECTION));
         root.add(linkTo(methodOn(ProfileController.class).getAuth(null)).withRel("profile"));
         root.add(linkTo(methodOn(RestaurantUserController.class).getAll()).withRel("restaurants-with-dishes"));
-        root.add(linkTo(methodOn(VoteController.class).getToday(null, Optional.empty())).withRel("vote"));
+        root.add(linkTo(methodOn(VoteController.class).getVotes(null, Optional.empty())).withRel("vote"));
         return root;
     }
 }

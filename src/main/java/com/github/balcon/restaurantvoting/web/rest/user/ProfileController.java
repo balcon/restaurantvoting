@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,7 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = ProfileController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Profile controller", description = "Get, update and delete profile. Registration new user")
 public class ProfileController {
     protected static final String BASE_URL = API_URL + "/user/profile";
@@ -39,6 +41,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registration new user")
     public UserDto create(@Valid @RequestBody User user) {
+        log.info("Registering new [{}]", user);
         return assembler.toModel(service.create(user));
     }
 
@@ -46,6 +49,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get authenticated user")
     public UserDto getAuth(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("Getting authenticated [{}]", authUser.getUser());
         return assembler.toModel(authUser.getUser());
     }
 
@@ -53,6 +57,7 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody User user) throws BindException {
+        log.info("Updating profile [{}] to [{}]", authUser.getUser(), user);
         // User does not have to change their roles
         user.setRoles(authUser.getUser().getRoles());
         service.update(authUser.id(), user);
@@ -61,6 +66,7 @@ public class ProfileController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("Deleting profile [{}]", authUser.getUser());
         service.delete(authUser.id());
     }
 }

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -25,6 +26,7 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = UserController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "User controller", description = "CRUD operations for users")
 public class UserController implements MethodsForAssembler {
     public static final String BASE_URL = API_URL + "/admin/users";
@@ -42,6 +44,7 @@ public class UserController implements MethodsForAssembler {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Registration new user")
     public UserDto create(@Valid @RequestBody User user) {
+        log.info("Creating new [{}]", user);
         return assembler.toModelWithCollection(service.create(user));
     }
 
@@ -49,6 +52,7 @@ public class UserController implements MethodsForAssembler {
     @ResponseStatus(HttpStatus.OK)
     @Override
     public UserDto getById(@PathVariable int id) {
+        log.info("Getting user id: [{}]", id);
         return assembler.toModelWithCollection(service.get(id));
     }
 
@@ -57,18 +61,21 @@ public class UserController implements MethodsForAssembler {
     @Override
     public CollectionModel<UserDto> getAll(@SortDefault(sort = {"name", "email"})
                                            @ParameterObject Pageable pageable) {
+        log.info("Getting all users");
         return assembler.toCollectionModel(service.getAll(pageable));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @RequestBody User user) throws BindException {
+        log.info("Update [{}] id: [{}]", user, id);
         service.update(id, user);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("Deleting user id: [{}]", id);
         service.delete(id);
     }
 }

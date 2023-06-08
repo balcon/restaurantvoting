@@ -8,7 +8,6 @@ import com.github.balcon.restaurantvoting.util.UserModificationRestrictor;
 import com.github.balcon.restaurantvoting.util.validation.UserValidator;
 import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -24,7 +23,6 @@ import static com.github.balcon.restaurantvoting.service.VoteService.VOTES_CACHE
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserService {
     public static final String USERS_CACHE = "users";
 
@@ -34,32 +32,27 @@ public class UserService {
     private final PasswordEncoder encoder;
 
     public User create(User user) {
-        log.info("Create new user [{}]", user);
         ValidationUtil.checkNew(user);
         return repository.save(prepareToCreate(user));
     }
 
     public User get(int id) {
-        log.info("Get user by id [{}]", id);
         return repository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
     @Cacheable(cacheNames = USERS_CACHE, key = "#email")
     public User get(String email) {
-        log.info("Get user with email [{}]", email);
         return repository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
     }
 
     public Page<User> getAll(Pageable pageable) {
-        log.info("Get all users with pagination [{}]", pageable);
         return repository.findAll(pageable);
     }
 
     @CacheEvict(cacheNames = USERS_CACHE, allEntries = true)
     @Transactional
     public void update(int id, User user) throws BindException {
-        log.info("Update user with id [{}] new values [{}]", id, user);
         restrictor.check(id);
         ValidationUtil.assureIdConsistent(user, id);
         repository.save(prepareToUpdate(user, id));
@@ -70,7 +63,6 @@ public class UserService {
             @CacheEvict(cacheNames = VOTES_CACHE, allEntries = true)})
     @Transactional
     public void delete(int id) {
-        log.info("Delete user with id [{}]", id);
         restrictor.check(id);
         ValidationUtil.checkIfExists(repository, id);
         repository.deleteById(id);

@@ -9,6 +9,7 @@ import com.github.balcon.restaurantvoting.util.validation.RestaurantUniqueValida
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -23,6 +24,7 @@ import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
 @RestController
 @RequestMapping(path = RestaurantController.BASE_URL, produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "Restaurant controller", description = "CRUD operations for restaurants")
 public class RestaurantController implements MethodsForAssembler {
     protected static final String BASE_URL = API_URL + "/admin/restaurants";
@@ -39,6 +41,7 @@ public class RestaurantController implements MethodsForAssembler {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantDto create(@Valid @RequestBody Restaurant restaurant) {
+        log.info("Creating new [{}]", restaurant);
         return assembler.toModelWithCollection(service.create(restaurant));
     }
 
@@ -46,6 +49,7 @@ public class RestaurantController implements MethodsForAssembler {
     @ResponseStatus(HttpStatus.OK)
     @Override
     public RestaurantDto getById(@PathVariable int id) {
+        log.info("Getting restaurant id: [{}]", id);
         return assembler.toModelWithCollection(service.get(id));
     }
 
@@ -54,18 +58,21 @@ public class RestaurantController implements MethodsForAssembler {
     @Override
     public CollectionModel<RestaurantDto> getAll(@SortDefault(sort = {"name", "address"})
                                                  @ParameterObject Pageable pageable) {
+        log.info("Getting all restaurants");
         return assembler.toCollectionModel(service.getAll(pageable));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
+        log.info("Updating [{}] id: [{}]", restaurant, id);
         service.update(id, restaurant);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("Deleting restaurant id: [{}]", id);
         service.delete(id);
     }
 }
