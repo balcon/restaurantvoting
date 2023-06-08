@@ -65,6 +65,7 @@ public class DishService {
     }
 
     // Populate demonstration dishes
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     public void populateDemoDishes() {
         Random rnd = new Random();
         restaurantService.getAll(Pageable.unpaged()).stream()
