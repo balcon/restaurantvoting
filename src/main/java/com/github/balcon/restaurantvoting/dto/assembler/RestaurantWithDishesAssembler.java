@@ -13,6 +13,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,19 +38,19 @@ public class RestaurantWithDishesAssembler {
 
     public RestaurantWithDishesDto toModelWithVotes(Restaurant res) {
         RestaurantWithDishesDto dto = toModel(res);
-        dto.setVotes(service.count(res));
+        dto.setVotes(service.countVotesOfRest(res));
         return dto;
     }
 
     public RestaurantWithDishesDto toModelWithCollection(Restaurant r) {
         RestaurantWithDishesDto dto = toModelWithVotes(r);
-        dto.add(linkTo(methodOn(RestaurantUserController.class).getAll(Sort.unsorted()))
+        dto.add(linkTo(methodOn(RestaurantUserController.class).getAll())
                 .withRel(IanaLinkRelations.COLLECTION));
         return dto;
     }
 
-    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants) {
-        Map<Restaurant, Integer> votes = service.countAll(restaurants).stream()
+    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants,LocalDate voteDate) {
+        Map<Restaurant, Integer> votes = service.countVotesOfAllRests(voteDate).stream()
                 .collect(Collectors.toMap(VoteRepository.VotesCount::getRestaurant, VoteRepository.VotesCount::getCount));
         CollectionModel<RestaurantWithDishesDto> dtos = CollectionModel.of(restaurants.stream()
                 .map(r -> {
@@ -57,7 +58,7 @@ public class RestaurantWithDishesAssembler {
                     dto.setVotes(votes.getOrDefault(r, 0));
                     return dto;
                 }).toList());
-        dtos.add(linkTo(methodOn(RestaurantUserController.class).getAll(Sort.unsorted())).withSelfRel());
+        dtos.add(linkTo(methodOn(RestaurantUserController.class).getAll()).withSelfRel());
         return dtos;
     }
 }

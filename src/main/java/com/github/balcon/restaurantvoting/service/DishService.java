@@ -8,6 +8,7 @@ import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.github.balcon.restaurantvoting.service.RestaurantService.RESTAURANTS_WITH_DISHES_CACHE;
 import static java.util.Objects.requireNonNullElse;
 
 @Service
@@ -29,6 +31,7 @@ public class DishService {
     private final DishRepository repository;
     private final RestaurantService restaurantService;
 
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public Dish create(int restaurantId, Dish dish) {
         log.info("Create new dish [{}] in restaurant with id [{}]", dish, restaurantId);
@@ -50,6 +53,7 @@ public class DishService {
                 restaurantId, requireNonNullElse(offerDate, DateTimeUtil.currentDate()), sort);
     }
 
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void update(int id, Dish dish) {
         log.info("Update dish with id [{}] new values [{}]", id, dish);
@@ -59,6 +63,7 @@ public class DishService {
         repository.save(dish);
     }
 
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void delete(int id) {
         log.info("Delete dish with id [{}]", id);

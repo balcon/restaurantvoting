@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.github.balcon.restaurantvoting.config.AppConfig.API_URL;
@@ -46,9 +47,9 @@ public class RestaurantUserController {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     @Operation(summary = "Get restaurants with today's dishes and votes")
-    public CollectionModel<RestaurantWithDishesDto> getAll(@SortDefault(sort = {"name", "dish.name"})
-                                                           @ParameterObject Sort sort) {
-        List<Restaurant> restaurants = service.getAllWithDishes(DateTimeUtil.currentDate(), sort);
-        return assembler.toCollectionModel(restaurants);
+    public CollectionModel<RestaurantWithDishesDto> getAll() {
+        LocalDate today = DateTimeUtil.currentDate();
+        List<Restaurant> restaurants = service.getAllWithDishes(today);
+        return assembler.toCollectionModel(restaurants, today);
     }
 }

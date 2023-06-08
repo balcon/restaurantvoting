@@ -7,18 +7,26 @@ import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static com.github.balcon.restaurantvoting.service.VoteService.VOTES_CACHE;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class RestaurantService {
+    public static final String RESTAURANTS_WITH_DISHES_CACHE = "restaurantsWithDishes";
+
     private final RestaurantRepository repository;
 
     public Restaurant create(Restaurant restaurant) {
@@ -43,11 +51,13 @@ public class RestaurantService {
         return repository.findAll(pageable);
     }
 
-    public List<Restaurant> getAllWithDishes(Sort sort) {
-        log.info("Get all restaurant with current dishes with sort [{}]", sort);
-        return repository.findAllWithDishesByDate(DateTimeUtil.currentDate(), sort);
+    @Cacheable(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, key = "#offerDate")
+    public List<Restaurant> getAllWithDishes(LocalDate offerDate) {
+        log.info("Get all restaurant with dishes by date [{}]", offerDate);
+        return repository.findAllWithDishesByDate(offerDate);
     }
 
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void update(int id, Restaurant restaurant) {
         log.info("Update restaurant with id [{}] new values [{}]", id, restaurant);
@@ -56,6 +66,9 @@ public class RestaurantService {
         repository.save(restaurant);
     }
 
+    @Caching(evict = {
+            @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = VOTES_CACHE, allEntries = true)})
     @Transactional
     public void delete(int id) {
         log.info("Delete restaurant with id [{}]", id);

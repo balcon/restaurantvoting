@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
+
+import static com.github.balcon.restaurantvoting.service.VoteService.VOTES_CACHE;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +65,9 @@ public class UserService {
         repository.save(prepareToUpdate(user, id));
     }
 
-    @CacheEvict(cacheNames = USERS_CACHE, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = USERS_CACHE, allEntries = true),
+            @CacheEvict(cacheNames = VOTES_CACHE, allEntries = true)})
     @Transactional
     public void delete(int id) {
         log.info("Delete user with id [{}]", id);

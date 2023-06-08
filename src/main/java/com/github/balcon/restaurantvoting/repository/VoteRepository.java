@@ -21,8 +21,8 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     int countByRestaurantAndVoteDate(Restaurant restaurant, LocalDate voteDate);
 
     @Query("select v.restaurant as restaurant, count(v.id) as count from Vote v " +
-            "where v.voteDate = :voteDate and v.restaurant in :restaurants group by v.restaurant")
-    List<VotesCount> countRestaurantsVotes(List<Restaurant> restaurants, LocalDate voteDate);
+            "where v.voteDate = :voteDate group by v.restaurant")
+    List<VotesCount> countOfAllByVoteDate(LocalDate voteDate);
 
     interface VotesCount {
         Restaurant getRestaurant();
