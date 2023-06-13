@@ -8,17 +8,14 @@ import com.github.balcon.restaurantvoting.util.validation.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.github.balcon.restaurantvoting.service.VoteService.VOTES_CACHE;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +33,8 @@ public class RestaurantService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    public Restaurant getWithDishes(int id, Sort sort) {
-        return repository.findByIdWithDishesByDate(id, DateTimeUtil.currentDate(), sort)
+    public Restaurant getWithDishes(int id) {
+        return repository.findByIdWithDishesByDate(id, DateTimeUtil.currentDate())
                 .orElseThrow(() -> new NotFoundException(id));
     }
 
@@ -58,9 +55,7 @@ public class RestaurantService {
         repository.save(restaurant);
     }
 
-    @Caching(evict = {
-            @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true),
-            @CacheEvict(cacheNames = VOTES_CACHE, allEntries = true)})
+    @CacheEvict(cacheNames = RESTAURANTS_WITH_DISHES_CACHE, allEntries = true)
     @Transactional
     public void delete(int id) {
         checkIfExists(id);

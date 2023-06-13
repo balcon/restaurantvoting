@@ -7,7 +7,6 @@ import com.github.balcon.restaurantvoting.repository.VoteRepository;
 import com.github.balcon.restaurantvoting.service.VoteService;
 import com.github.balcon.restaurantvoting.web.rest.user.RestaurantUserController;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -32,7 +31,7 @@ public class RestaurantWithDishesAssembler {
                 .map(dishAssembler::toModel)
                 .toList();
         RestaurantWithDishesDto dto = new RestaurantWithDishesDto(r.getName(), r.getAddress(), dishDtos);
-        dto.add(WebMvcLinkBuilder.linkTo(methodOn(RestaurantUserController.class).getById(r.id(), Sort.unsorted())).withSelfRel());
+        dto.add(WebMvcLinkBuilder.linkTo(methodOn(RestaurantUserController.class).getById(r.id())).withSelfRel());
         return dto;
     }
 
@@ -49,7 +48,7 @@ public class RestaurantWithDishesAssembler {
         return dto;
     }
 
-    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants,LocalDate voteDate) {
+    public CollectionModel<RestaurantWithDishesDto> toCollectionModel(List<Restaurant> restaurants, LocalDate voteDate) {
         Map<Restaurant, Integer> votes = service.countVotesOfAllRests(voteDate).stream()
                 .collect(Collectors.toMap(VoteRepository.VotesCount::getRestaurant, VoteRepository.VotesCount::getCount));
         CollectionModel<RestaurantWithDishesDto> dtos = CollectionModel.of(restaurants.stream()

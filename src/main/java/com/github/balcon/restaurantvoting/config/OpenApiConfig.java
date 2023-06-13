@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Restaurants voting REST app.",
-                version = "0.9.1",
+                version = "0.9.2",
                 description = """
                         <h4><a href='https://topjava.ru/topjava'>Java course</a> graduation project.</h4>
                         <h4><a href='https://github.com/balcon/restaurantvoting'>Technical requirement and credentials.</a></h4>

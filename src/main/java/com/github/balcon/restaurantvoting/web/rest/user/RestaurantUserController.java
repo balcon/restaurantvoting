@@ -9,9 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.RepresentationModel;
@@ -39,10 +36,9 @@ public class RestaurantUserController {
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     @Operation(summary = "Get restaurant with today's dishes and votes")
-    public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id,
-                                                                @SortDefault("dish.name") @ParameterObject Sort sort) {
+    public RepresentationModel<RestaurantWithDishesDto> getById(@PathVariable int id) {
         log.info("Getting restaurant id: [{}] with today's dishes", id);
-        Restaurant restaurant = service.getWithDishes(id, sort);
+        Restaurant restaurant = service.getWithDishes(id);
         return assembler.toModelWithCollection(restaurant);
     }
 

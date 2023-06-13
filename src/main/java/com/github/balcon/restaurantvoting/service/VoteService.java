@@ -7,8 +7,6 @@ import com.github.balcon.restaurantvoting.model.Vote;
 import com.github.balcon.restaurantvoting.repository.VoteRepository;
 import com.github.balcon.restaurantvoting.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +18,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class VoteService {
-    public static final String VOTES_CACHE = "votesCache";
     public static final LocalTime REVOTE_DEADLINE = LocalTime.of(11, 0);
 
     private final VoteRepository repository;
@@ -30,7 +27,6 @@ public class VoteService {
         return repository.findWithRestaurant(user, voteDate);
     }
 
-    @CacheEvict(cacheNames = VOTES_CACHE, allEntries = true)
     @Transactional
     public void doVote(int restaurantId, User user) {
         Restaurant restaurant = restaurantService.get(restaurantId);
@@ -52,7 +48,6 @@ public class VoteService {
         return repository.countByRestaurantAndVoteDate(restaurant, DateTimeUtil.currentDate());
     }
 
-    @Cacheable(cacheNames = VOTES_CACHE, key = "#voteDate")
     public List<VoteRepository.VotesCount> countVotesOfAllRests(LocalDate voteDate) {
         return repository.countOfAllByVoteDate(voteDate);
     }

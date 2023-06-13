@@ -19,6 +19,7 @@ public abstract class BaseEntity implements Persistable<Integer> {
     @SequenceGenerator(name = "main_seq", sequenceName = "main_seq", allocationSize = 1, initialValue = START_SEQ)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "main_seq")
     @Column(updatable = false)
+    @Schema(accessMode = Schema.AccessMode.WRITE_ONLY)
     protected Integer id;
 
     @Transient

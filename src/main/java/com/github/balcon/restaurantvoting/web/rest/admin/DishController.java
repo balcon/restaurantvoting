@@ -4,7 +4,6 @@ import com.github.balcon.restaurantvoting.dto.DishDto;
 import com.github.balcon.restaurantvoting.dto.assembler.DishAssembler;
 import com.github.balcon.restaurantvoting.model.Dish;
 import com.github.balcon.restaurantvoting.service.DishService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -71,13 +70,5 @@ public class DishController {
     public void delete(@PathVariable int id) {
         log.info("Deleting dish id: [{}]", id);
         service.delete(id);
-    }
-
-    // Only for demonstration
-    @Hidden
-    @PostMapping(BASE_URL + "/demo")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void populate() {
-        service.populateDemoDishes();
     }
 }
