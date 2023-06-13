@@ -18,9 +18,9 @@ Build a voting system for deciding where to have lunch.
     * If it is after 11:00 then it is too late, vote can't be changed
 * Each restaurant provides a new menu each day.
 
-API http://62.109.25.115/api
+API http://balcon.fvds.ru/api
 
-[API Documentation](http://62.109.25.115/swagger-ui/index.html)
+[API Documentation](http://balcon.fvds.ru/swagger-ui/index.html)
 
 <details>
 <summary>Test credentials:</summary>
